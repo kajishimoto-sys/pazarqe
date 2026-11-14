@@ -213,7 +213,7 @@ function pickLang(){
   return /^sq/i.test(navigator.language||'')?'sq':'mk';
 }
 var L=pickLang();
-var D=[],cat='all',U=null,mode='reg',view='all',RT=null,FAV=new Set(),lastUid,loaded=false,EDIT=null,KEEP=[],ORIG=[];
+var D=[],cat='all',U=null,mode='reg',view='all',RT=null,FAV=new Set(),lastUid,loaded=false,EDIT=null,KEEP=[],ORIG=[],PEND=null,favReady=false;
 
 function $(i){return document.getElementById(i)}
 function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
@@ -243,12 +243,25 @@ async function load(){
   if(!sb){loaded=true;render();return}
   var r=await sb.from('listings').select('*').order('is_top',{ascending:false}).order('renewed_at',{ascending:false}).limit(500);
   if(r.error){toast(T[L].err);return}
-  D=r.data.map(mapRow);loaded=true;render();
+  D=r.data.map(mapRow);loaded=true;render();runPending();
 }
 async function loadFavs(){
-  FAV=new Set();
+  FAV=new Set();favReady=false;
   if(sb&&U){var r=await sb.from('favorites').select('listing_id');if(!r.error)r.data.forEach(function(x){FAV.add(x.listing_id)})}
-  buildTabs();render();
+  favReady=true;buildTabs();render();runPending();
+}
+/* the listing page sends people here to edit / report / save; log in first if needed */
+function runPending(){
+  if(!PEND||!loaded||!sb)return;
+  var a=PEND.act,t=T[L];
+  if(!U){if(!$('auth').open)authOpen('login',a=='edit'?t.needLogin2:a=='report'?t.needLoginRep:t.needLoginFav);return}
+  if(a=='fav'&&!favReady)return;
+  var id=PEND.id;PEND=null;
+  try{history.replaceState(null,'',location.pathname+(L=='mk'?'':'?lang='+L))}catch(e){}
+  var d=D.filter(function(x){return x.id==id})[0];if(!d)return;
+  if(a=='edit'){if(d.owner==U.id)openEdit(d)}
+  else if(a=='report'){if(d.owner!=U.id){RT=d;$('rreason').selectedIndex=0;$('rep').showModal()}}
+  else if(a=='fav'){if(!FAV.has(d.id))toggleFav(d.id)}
 }
 async function toggleFav(id){
   if(!U){authOpen('login',T[L].needLoginFav);return}
@@ -342,7 +355,7 @@ function render(){
   if(!r.length){var e=el('div','empty',!sb?t.cfg:!loaded?t.loading:view=='fav'?t.noFav:view=='mine'?t.noMine:t.none);e.style.gridColumn='1/-1';g.appendChild(e);return}
   r.forEach(function(d){
     var c=cm(d.c),a=el('a','card');a.href=listingUrl(d)+(L=='mk'?'':'?lang='+L);
-    a.onclick=function(e){if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey||e.button)return;e.preventDefault();open_(d)};
+    a.onclick=function(e){if(!d.hid||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey||e.button)return;e.preventDefault();open_(d)};
     var pic=el('div','pic');
     if(d.img)pic.appendChild(mkImg(d.img,d.t,true));else{pic.style.background=c[4];pic.appendChild(document.createTextNode(c[1]))}
     if(d.top)pic.appendChild(el('span','top',t.top));
@@ -498,7 +511,10 @@ $('pf').onsubmit=async function(e){
       if(gone.length)sb.storage.from('listing-photos').remove(photoPaths(gone));
       var ix=D.indexOf(EDIT);if(ix>-1)D[ix]=mapRow(r.data);
     }else{D.unshift(mapRow(r.data));cat='all';view='all'}
-    EDIT=null;KEEP=[];ORIG=[];$('pf').reset();$('form').close();labels();render();toast(wasEdit?t.upd:t.done);
+    var nm=mapRow(r.data);
+    EDIT=null;KEEP=[];ORIG=[];$('pf').reset();$('form').close();labels();render();
+    if(nm.hid){toast(wasEdit?t.upd:t.done);return}
+    location.href=listingUrl(nm)+'?'+(wasEdit?'saved':'posted')+'=1&v='+Date.now()+(L=='mk'?'':'&lang='+L);
   }catch(err){
     if(uploaded.length)sb.storage.from('listing-photos').remove(uploaded);
     var m=(err&&err.message)||'';
@@ -516,7 +532,11 @@ $('rf').onsubmit=async function(e){
 };
 
 /* ───── start ───── */
-(function(){var pc=new URLSearchParams(location.search).get('cat');if(CATS.some(function(c){return c[0]==pc}))cat=pc})();
+(function(){
+  var qp=new URLSearchParams(location.search),pc=qp.get('cat');
+  if(CATS.some(function(c){return c[0]==pc}))cat=pc;
+  ['edit','report','fav'].forEach(function(k){var v=qp.get(k);if(v&&/^[0-9a-f-]{36}$/i.test(v))PEND={act:k,id:v}});
+})();
 labels();render();
 if(sb){
   sb.auth.onAuthStateChange(function(ev,s){
