@@ -22,9 +22,9 @@ const FIELDS = {
 };
 
 const TX = {
-  mk: { brand: 'Пазарче', free: 'Бесплатно', call: 'Повикај', show: 'Прикажи телефон', all: 'Сите огласи', more: 'Повеќе огласи во', usedC: 'Користен', newC: 'Нов', cond: 'Состојба', share: 'Сподели', copied: 'Линкот е копиран', today: 'денес', nf: 'Огласот не е пронајден', nfp: 'Овој оглас е избришан, скриен или не постои.', err: 'Привремена грешка. Обиди се повторно за малку.', desc: 'Опис', posted: 'Објавен', tag: 'огласи од Македонија' },
-  en: { brand: 'Пазарче', free: 'Free', call: 'Call', show: 'Show phone number', all: 'All listings', more: 'More listings in', usedC: 'Used', newC: 'New', cond: 'Condition', share: 'Share', copied: 'Link copied', today: 'today', nf: 'Listing not found', nfp: 'This listing was deleted, hidden or never existed.', err: 'Temporary error. Please try again in a moment.', desc: 'Description', posted: 'Posted', tag: 'classifieds in North Macedonia' },
-  sq: { brand: 'Pazarçe', free: 'Falas', call: 'Telefono', show: 'Shfaq numrin e telefonit', all: 'Të gjitha njoftimet', more: 'Më shumë njoftime në', usedC: 'I përdorur', newC: 'I ri', cond: 'Gjendja', share: 'Ndaj', copied: 'Lidhja u kopjua', today: 'sot', nf: 'Njoftimi nuk u gjet', nfp: 'Ky njoftim është fshirë, fshehur ose nuk ekziston.', err: 'Gabim i përkohshëm. Provo përsëri pas pak.', desc: 'Përshkrimi', posted: 'Postuar', tag: 'njoftime nga Maqedonia e Veriut' },
+  mk: { brand: 'Пазарче', free: 'Бесплатно', call: 'Повикај', show: 'Прикажи телефон', all: 'Сите огласи', more: 'Повеќе огласи во', usedC: 'Користен', newC: 'Нов', cond: 'Состојба', share: 'Сподели', copied: 'Линкот е копиран', today: 'денес', nf: 'Огласот не е пронајден', nfp: 'Овој оглас е избришан, скриен или не постои.', err: 'Привремена грешка. Обиди се повторно за малку.', desc: 'Опис', posted: 'Објавен', tag: 'огласи од Македонија', edit: 'Уреди', renew: 'Обнови', del: 'Избриши', confirmDel: 'Да го избришам огласот?', report: 'Пријави', save: 'Зачувај', saved: 'Зачувано', renewed: 'Огласот е обновен', fail: 'Нешто тргна наопаку. Обиди се повторно.', okPosted: 'Огласот е објавен', okSaved: 'Огласот е ажуриран' },
+  en: { brand: 'Пазарче', free: 'Free', call: 'Call', show: 'Show phone number', all: 'All listings', more: 'More listings in', usedC: 'Used', newC: 'New', cond: 'Condition', share: 'Share', copied: 'Link copied', today: 'today', nf: 'Listing not found', nfp: 'This listing was deleted, hidden or never existed.', err: 'Temporary error. Please try again in a moment.', desc: 'Description', posted: 'Posted', tag: 'classifieds in North Macedonia', edit: 'Edit', renew: 'Renew', del: 'Delete', confirmDel: 'Delete this listing?', report: 'Report', save: 'Save', saved: 'Saved', renewed: 'Listing renewed', fail: 'Something went wrong. Please try again.', okPosted: 'Listing published', okSaved: 'Listing updated' },
+  sq: { brand: 'Pazarçe', free: 'Falas', call: 'Telefono', show: 'Shfaq numrin e telefonit', all: 'Të gjitha njoftimet', more: 'Më shumë njoftime në', usedC: 'I përdorur', newC: 'I ri', cond: 'Gjendja', share: 'Ndaj', copied: 'Lidhja u kopjua', today: 'sot', nf: 'Njoftimi nuk u gjet', nfp: 'Ky njoftim është fshirë, fshehur ose nuk ekziston.', err: 'Gabim i përkohshëm. Provo përsëri pas pak.', desc: 'Përshkrimi', posted: 'Postuar', tag: 'njoftime nga Maqedonia e Veriut', edit: 'Ndrysho', renew: 'Rinovo', del: 'Fshi', confirmDel: 'Ta fshij njoftimin?', report: 'Raporto', save: 'Ruaj', saved: 'E ruajtur', renewed: 'Njoftimi u rinovua', fail: 'Diçka shkoi keq. Provo përsëri.', okPosted: 'Njoftimi u publikua', okSaved: 'Njoftimi u përditësua' },
 };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -79,7 +79,11 @@ h2{font-size:16px;margin:16px 0 4px}.desc{white-space:pre-line;overflow-wrap:any
 .btn{border:0;border-radius:10px;padding:12px 16px;min-height:48px;font:inherit;font-weight:700;background:var(--tag);color:var(--tag-ink);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
 .btn.main{flex:1;font-size:17px}.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
 .links{margin-top:16px;display:flex;flex-wrap:wrap;gap:12px}.links a{color:var(--brand)}
-footer{max-width:760px;margin:0 auto;padding:0 14px 120px;color:var(--mute);font-size:13px}`;
+footer{max-width:760px;margin:0 auto;padding:0 14px 120px;color:var(--mute);font-size:13px}
+.notice{background:var(--brand);color:var(--brand-ink);border-radius:10px;padding:10px 14px;margin:0 0 12px;font-weight:700}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.tools:empty{display:none}
+.btn.sm{min-height:42px;padding:8px 14px;font-size:15px}.btn.sm.ghost{border:1.5px solid var(--line)}.btn.bad{background:#c0392b;color:#fff}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;z-index:20;max-width:92vw;text-align:center}`;
 
 function shell({ lang, title, desc, canonical, alternates, image, body, ld, noindex, status }) {
   const tx = TX[lang];
@@ -155,9 +159,11 @@ export default async (req) => {
     ? `<div class="gal"><div class="gs" id="gs">${images.map((u, i) => `<img src="${esc(u)}" alt="${esc(l.title)}"${i ? ' loading="lazy"' : ' fetchpriority="high"'} width="800" height="600">`).join('')}</div>${images.length > 1 ? `<button class="gb l" id="gl" type="button" aria-label="Previous">‹</button><button class="gb r" id="gr" type="button" aria-label="Next">›</button><span class="gc" id="gc">1 / ${images.length}</span>` : ''}</div>`
     : `<div class="noimg" style="background:${COLOR[l.category] || '#e6e6e6'}">${cat[1]}</div>`;
 
+  const notice = url.searchParams.get('posted') ? tx.okPosted : url.searchParams.get('saved') ? tx.okSaved : '';
+  const pageData = JSON.stringify({ url: SB, key: KEY, edit: tx.edit, renew: tx.renew, del: tx.del, confirmDel: tx.confirmDel, report: tx.report, save: tx.save, saved: tx.saved, renewed: tx.renewed, fail: tx.fail });
   const body = `<main>
-<p class="crumbs"><a href="${esc(home)}">${esc(tx.brand)}</a> › <a href="${esc(catUrl)}">${esc(catName)}</a></p>
-<article class="card">
+${notice ? `<p class="notice" role="status">✔ ${esc(notice)}</p>` : ''}<p class="crumbs"><a href="${esc(home)}">${esc(tx.brand)}</a> › <a href="${esc(catUrl)}">${esc(catName)}</a></p>
+<article class="card" id="art" data-id="${esc(id)}" data-owner="${esc(l.owner)}" data-lang="${esc(lang)}" data-imgs="${esc(JSON.stringify(images))}" data-x="${esc(pageData)}">
 ${gallery}
 <h1>${esc(l.title)}</h1>
 <p class="big">${esc(price)}</p>
@@ -165,12 +171,14 @@ ${gallery}
 ${specs.length ? `<div class="specs">${specs.map(([k, v]) => `<span class="spec"><b>${esc(k)}</b> ${esc(v)}</span>`).join('')}</div>` : ''}
 ${l.description ? `<h2>${esc(tx.desc)}</h2><p class="desc">${esc(l.description)}</p>` : ''}
 <div class="links"><a href="${esc(catUrl)}">${esc(tx.more)} ${esc(catName)} →</a><a href="${esc(home)}">${esc(tx.all)}</a></div>
+<div class="tools" id="tools"></div>
 </article></main>
 <div class="bar">
 <button class="btn main" id="ph" type="button" data-p="${esc(phoneB64)}" data-c="${esc(tx.call)}">📞 ${esc(tx.show)}</button>
 <button class="btn ghost" id="sh" type="button" data-u="${esc(canonical)}" data-t="${esc(l.title)}" data-m="${esc(tx.copied)}">${esc(tx.share)}</button>
 </div>
 <footer>${esc(tx.brand)} – ${esc(tx.tag)}</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script>
 (function(){
 var ph=document.getElementById('ph');
@@ -183,6 +191,43 @@ document.getElementById('gl')&&(document.getElementById('gl').onclick=function()
 document.getElementById('gr')&&(document.getElementById('gr').onclick=function(){s.scrollBy({left:s.clientWidth,behavior:'smooth'})});
 s.onscroll=function(){if(c)c.textContent=(Math.round(s.scrollLeft/s.clientWidth)+1)+' / '+s.children.length}}
 })();
+</script>
+<script>
+window.addEventListener('load',function(){
+var art=document.getElementById('art'),tools=document.getElementById('tools');
+if(!window.supabase||!art||!tools)return;
+var X=JSON.parse(art.dataset.x),id=art.dataset.id,owner=art.dataset.owner,imgs=JSON.parse(art.dataset.imgs||'[]'),lang=art.dataset.lang;
+var sb=window.supabase.createClient(X.url,X.key),q=lang==='mk'?'':'&lang='+lang;
+function add(e,cls,txt){e.className='btn sm '+cls;e.textContent=txt;tools.appendChild(e);return e}
+function link(cls,txt,href){var a=document.createElement('a');a.href=href;return add(a,cls,txt)}
+function btn(cls,txt){var b=document.createElement('button');b.type='button';return add(b,cls,txt)}
+function toast(m){var t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},2500)}
+sb.auth.getSession().then(function(r){
+  var u=r.data&&r.data.session&&r.data.session.user;
+  if(u&&u.id===owner){
+    link('ghost','✎ '+X.edit,'/?edit='+id+q);
+    btn('ghost','↻ '+X.renew).onclick=function(){sb.rpc('renew_listing',{p_id:id}).then(function(r){toast(r.error?X.fail:X.renewed)})};
+    btn('bad','🗑 '+X.del).onclick=function(){
+      if(!confirm(X.confirmDel))return;
+      sb.from('listings').delete().eq('id',id).then(function(r){
+        if(r.error){toast(X.fail);return}
+        var ps=[];imgs.forEach(function(x){var p=String(x).split('/listing-photos/')[1];if(p){ps.push(p);ps.push(p.replace(/[.]jpg$/,'_t.jpg'))}});
+        if(ps.length)sb.storage.from('listing-photos').remove(ps);
+        location.href='/'+(q?'?'+q.slice(1):'');
+      });
+    };
+  }else{
+    link('ghost','⚑ '+X.report,'/?report='+id+q);
+    if(!u){link('ghost','♡ '+X.save,'/?fav='+id+q)}
+    else{
+      var b=btn('ghost','♡ '+X.save),on=false;
+      var paint=function(){b.textContent=on?'♥ '+X.saved:'♡ '+X.save};
+      sb.from('favorites').select('listing_id').eq('listing_id',id).then(function(r){on=!!(r.data&&r.data.length);paint()});
+      b.onclick=function(){on=!on;paint();(on?sb.from('favorites').insert({listing_id:id}):sb.from('favorites').delete().eq('listing_id',id)).then(function(r){if(r.error){on=!on;paint();toast(X.fail)}})};
+    }
+  }
+});
+});
 </script>`;
 
   const ld = [
@@ -201,7 +246,7 @@ s.onscroll=function(){if(c)c.textContent=(Math.round(s.scrollLeft/s.clientWidth)
 
   return html(200, shell({ lang, title, desc, canonical, alternates: self, image: images[0], body, ld }), {
     'cache-control': 'public, max-age=0, must-revalidate',
-    'netlify-cdn-cache-control': 'public, s-maxage=300, stale-while-revalidate=3600',
+    'netlify-cdn-cache-control': 'public, s-maxage=60, stale-while-revalidate=600',
   });
 };
 
