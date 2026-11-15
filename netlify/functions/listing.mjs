@@ -79,11 +79,18 @@ h2{font-size:16px;margin:16px 0 4px}.desc{white-space:pre-line;overflow-wrap:any
 .btn{border:0;border-radius:10px;padding:12px 16px;min-height:48px;font:inherit;font-weight:700;background:var(--tag);color:var(--tag-ink);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
 .btn.main{flex:1;font-size:17px}.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
 .links{margin-top:16px;display:flex;flex-wrap:wrap;gap:12px}.links a{color:var(--brand)}
-footer{max-width:760px;margin:0 auto;padding:0 14px 120px;color:var(--mute);font-size:13px}
+footer{max-width:760px;margin:0 auto;padding:0 14px 120px;color:var(--mute);font-size:13px;line-height:1.9}footer a{color:var(--mute)}
 .notice{background:var(--brand);color:var(--brand-ink);border-radius:10px;padding:10px 14px;margin:0 0 12px;font-weight:700}
 .tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.tools:empty{display:none}
 .btn.sm{min-height:42px;padding:8px 14px;font-size:15px}.btn.sm.ghost{border:1.5px solid var(--line)}.btn.bad{background:#c0392b;color:#fff}
 .toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;z-index:20;max-width:92vw;text-align:center}`;
+
+const FOOT = {
+  mk: [['help', 'Помош'], ['safety', 'Безбедно тргување'], ['privacy', 'Политика за приватност'], ['terms', 'Услови за користење'], ['contact', 'Контакт']],
+  sq: [['help', 'Ndihma'], ['safety', 'Tregtim i sigurt'], ['privacy', 'Politika e privatësisë'], ['terms', 'Kushtet e përdorimit'], ['contact', 'Kontakt']],
+  en: [['help', 'Help'], ['safety', 'Trade safely'], ['privacy', 'Privacy policy'], ['terms', 'Terms of use'], ['contact', 'Contact']],
+};
+const footLinks = (lang) => FOOT[lang].map(([k, t]) => `<a href="/${k}.html${lang === 'mk' ? '' : '?lang=' + lang}">${esc(t)}</a>`).join(' · ');
 
 function shell({ lang, title, desc, canonical, alternates, image, body, ld, noindex, status }) {
   const tx = TX[lang];
@@ -177,7 +184,7 @@ ${l.description ? `<h2>${esc(tx.desc)}</h2><p class="desc">${esc(l.description)}
 <button class="btn main" id="ph" type="button" data-p="${esc(phoneB64)}" data-c="${esc(tx.call)}">📞 ${esc(tx.show)}</button>
 <button class="btn ghost" id="sh" type="button" data-u="${esc(canonical)}" data-t="${esc(l.title)}" data-m="${esc(tx.copied)}">${esc(tx.share)}</button>
 </div>
-<footer>${esc(tx.brand)} – ${esc(tx.tag)}</footer>
+<footer>${esc(tx.brand)} – ${esc(tx.tag)}<br>${footLinks(lang)}</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script>
 (function(){
