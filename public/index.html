@@ -51,7 +51,7 @@ main{max-width:1100px;margin:auto;padding:14px}
 .card:hover{border-color:var(--brand)}
 .pic{aspect-ratio:4/3;display:grid;place-items:center;font-size:56px;position:relative;overflow:hidden}
 .pic>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.price{position:absolute;left:0;bottom:10px;background:var(--tag);color:var(--tag-ink);font-weight:800;padding:3px 12px 3px 10px;clip-path:polygon(0 0,100% 0,calc(100% - 9px) 50%,100% 100%,0 100%)}
+.price{font-size:17px;line-height:1.3;position:absolute;left:0;bottom:10px;background:var(--tag);color:var(--tag-ink);font-weight:800;padding:3px 12px 3px 10px;clip-path:polygon(0 0,100% 0,calc(100% - 9px) 50%,100% 100%,0 100%)}
 .top{position:absolute;top:8px;right:8px;background:var(--brand);color:var(--brand-ink);font-size:12px;font-weight:800;padding:2px 8px;border-radius:4px}
 .hid{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:#c0392b;color:#fff;font-size:12px;font-weight:800;padding:2px 8px;border-radius:4px}
 .cnt{position:absolute;right:8px;bottom:10px;background:rgba(0,0,0,.62);color:#fff;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px}
@@ -112,6 +112,33 @@ label input,label select,label textarea{width:100%;min-width:0;max-width:100%;bo
   .actions .call{flex:1 1 100%;order:-1;min-height:48px;font-size:17px}
   .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 }
+
+.btn.ic{padding:7px 11px}
+.btn.bad{color:#c0392b}
+.hero{background:linear-gradient(135deg,var(--brand),#0b4f44);color:var(--brand-ink);border-radius:14px;padding:22px 20px;margin:0 0 14px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.hero h1{margin:0 0 4px;font-size:26px;line-height:1.2;letter-spacing:-.3px}
+.hero p{margin:0;opacity:.92}
+.hero .btn{font-size:17px;padding:13px 22px;min-height:48px;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+.nb{position:absolute;top:12px;left:52px;background:#d6336c;color:#fff;font-size:11px;font-weight:800;padding:2px 7px;border-radius:4px}
+.dsc{display:none}
+.grid.list{grid-template-columns:1fr;gap:10px}
+.grid.list .card{flex-direction:row}
+.grid.list .pic{width:36%;max-width:260px;aspect-ratio:4/3;flex:none}
+.grid.list .info{flex:1;display:flex;flex-direction:column;gap:3px}
+.grid.list .dsc{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vt{border:1.5px solid var(--line);background:var(--surface);border-radius:8px;min-height:40px;padding:0 12px;cursor:pointer}
+.fclr{border:0;background:none;color:var(--brand);text-decoration:underline;cursor:pointer;padding:6px}
+.acc h3{margin:6px 0 0;font-size:15px}
+.acc form{display:grid;gap:8px;padding-top:10px;border-top:1px solid var(--line)}
+.foot{max-width:1100px;margin:10px auto 0;padding:18px 14px calc(30px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);color:var(--mute);font-size:14px}
+.foot .fl{display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:8px}
+.foot a{color:var(--mute)}
+@media (max-width:640px){
+  .hero{padding:16px 14px}.hero h1{font-size:21px}.hero .btn{width:100%}
+  #hfav .tx,#acct .nm{display:none}
+  .grid.list .pic{width:42%}
+  .foot{padding-bottom:100px}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -120,24 +147,52 @@ label input,label select,label textarea{width:100%;min-width:0;max-width:100%;bo
   <a class="logo" id="brand" href="/">🛒 Пазарче</a>
   <select class="lang" id="lang" aria-label="Language"><option value="mk">МК</option><option value="sq">SQ</option><option value="en">EN</option></select>
   <a class="btn ghost" id="adm" href="/admin.html" hidden>Admin</a>
+  <button class="btn ghost ic" id="hfav" hidden aria-label="Saved">♡ <span id="hfn">0</span></button>
+  <button class="btn ghost ic" id="acct" hidden>👤<span class="nm" id="acn"></span></button>
   <button class="btn ghost" id="login"></button><button class="btn ghost" id="reg"></button><button class="btn" id="post"></button>
   <form class="search" id="sf" onsubmit="return false"><input id="q" type="search" enterkeyhint="search" autocomplete="off"></form>
 </div></header>
 <main>
+  <section class="hero"><div><h1 id="heroT"></h1><p id="heroP"></p></div><button class="btn" id="hpost"></button></section>
   <div class="cats" id="tabs"></div>
   <div class="cats" id="cats"></div>
-  <div class="fbar"><button type="button" class="chip ftog" id="ftog" aria-expanded="false" aria-controls="filters"></button><span class="count" id="count"></span></div>
+  <div class="fbar"><button type="button" class="chip ftog" id="ftog" aria-expanded="false" aria-controls="filters"></button><button type="button" class="fclr" id="fclr" hidden></button><span class="count" id="count"></span><button type="button" class="vt" id="vtog"></button></div>
   <div class="filters" id="filters">
     <select id="city" aria-label="City"></select>
+    <input id="min" type="number" min="0" inputmode="numeric">
     <input id="max" type="number" min="0" inputmode="numeric">
     <select id="sort" aria-label="Sort"></select>
     <select id="cond" aria-label="Condition"></select>
   </div>
   <div class="grid" id="grid"></div>
 </main>
+<footer class="foot"><div class="fl" id="fl"></div><div id="fc"></div></footer>
 <button class="btn fab" id="fab"></button>
 
 <dialog id="view"><div class="dlg" id="vbody"></div></dialog>
+<dialog id="acc"><div class="dlg acc">
+  <h2 data-t="accT"></h2>
+  <p class="meta" id="accmail" style="margin:0"></p>
+  <div class="row"><button type="button" class="chip" id="accmine"></button><button type="button" class="chip" id="accfav"></button></div>
+  <form id="pfrm">
+    <h3 data-t="profile"></h3>
+    <label><span data-t="name"></span><input name="name" id="accname" maxlength="40" autocomplete="name"></label>
+    <label><span data-t="defPhone"></span><input name="phone" id="accphone" type="tel" autocomplete="tel" maxlength="20"></label>
+    <div class="actions"><button class="btn alt" data-t="saveProf"></button></div>
+  </form>
+  <form id="pwf">
+    <h3 data-t="secT"></h3>
+    <label><span data-t="newPass"></span><input id="accpw" type="password" minlength="6" autocomplete="new-password" required></label>
+    <div class="actions"><button class="btn alt" data-t="chPass"></button></div>
+  </form>
+  <form id="emf">
+    <label><span data-t="newEmail"></span><input id="accem" type="email" autocomplete="email" required></label>
+    <div class="actions"><button class="btn alt" data-t="chEmail"></button></div>
+  </form>
+  <p class="meta" id="accerr" role="alert" style="margin:0;color:#c0392b"></p>
+  <div class="actions"><button type="button" class="btn ghost" id="accclose" data-t="close" style="color:var(--ink)"></button><button type="button" class="btn ghost" id="accout" data-t="logout" style="color:var(--ink)"></button></div>
+  <button type="button" class="btn ghost bad" id="accdel" data-t="delAcc"></button>
+</div></dialog>
 <dialog id="rec"><form class="dlg" id="rcf" method="dialog">
   <h2 data-t="newPassT"></h2>
   <label><span data-t="newPass"></span><input name="np" id="np" type="password" minlength="6" autocomplete="new-password" required></label>
@@ -191,9 +246,9 @@ var sb=null;
 try{if(SUPABASE_URL.indexOf('YOUR-')<0&&window.supabase)sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY)}catch(e){}
 
 var T={
-mk:{brand:'Пазарче',pageTitle:'Пазарче – огласи од Македонија',post:'Објави оглас',search:'Барај огласи…',all:'Сите',allCities:'Сите градови',max:'Макс. цена €',n:'огласи',new:'Најнови',lo:'Цена: ниска → висока',hi:'Цена: висока → ниска',call:'Повикај',cancel:'Откажи',publish:'Објави',ptitle:'Нов оглас',title:'Наслов',category:'Категорија',city:'Град',priceEur:'Цена (€)',phone:'Телефон',desc:'Опис',none:'Нема огласи за овие филтри. Пробај друг град или категорија.',done:'Огласот е објавен',close:'Затвори',free:'Бесплатно',login:'Најава',reg:'Регистрација',logout:'Одјава',name:'Име',email:'Е-пошта',pass:'Лозинка (мин. 6 знаци)',haveAcc:'Веќе имаш профил? Најави се',noAcc:'Немаш профил? Регистрирај се',bad:'Погрешна е-пошта или лозинка',exists:'Профил со оваа е-пошта веќе постои',welcome:'Добредојде',needLogin:'Регистрирај се или најави се за да објавиш оглас',cond:'Состојба',anyCond:'Сите состојби',newC:'Нов',usedC:'Користен',photo:'Слики (до 6)',top:'ТОП',bye:'Одјавени сте',browse:'Сите огласи',saved:'Зачувани',mine:'Мои огласи',needLogin2:'Најави се за да ги видиш твоите огласи',needLoginFav:'Најави се за да зачуваш огласи',needLoginRep:'Најави се за да пријавиш оглас',noFav:'Се уште немаш зачувани огласи. Тапни на срцето на оглас за да го зачуваш.',noMine:'Се уште немаш објавено огласи. Притисни „Објави оглас“.',del:'Избриши',confirmDel:'Да го избришам огласот?',renew:'Обнови',report:'Пријави',reportT:'Пријави оглас',reason:'Причина',note:'Забелешка (опционално)',send:'Испрати',r1:'Измама или лажен оглас',r2:'Погрешна категорија',r3:'Веќе продадено',r4:'Забранет предмет',reported:'Пријавата е испратена',dup:'Веќе го пријавивте овој оглас',deleted:'Огласот е избришан',renewed:'Огласот е обновен',confirm:'Провери ја е-поштата и потврди го профилот, па најави се',err:'Нешто тргна наопаку. Обиди се повторно.',cfg:'Сајтот сè уште не е поврзан со базата (Supabase).',rate:'Премногу обиди. Почекај малку.',limit:'Достигнат е дневниот лимит од 10 огласи',susp:'Вашиот профил е суспендиран',loading:'Се вчитува…',today:'денес',edit:'Уреди',editT:'Уреди оглас',save:'Зачувај',upd:'Огласот е ажуриран',maxPh:'Најмногу 6 слики по оглас',forgot:'Заборавена лозинка?',needEmail:'Прво внеси ја твојата е-пошта',resetSent:'Ако профилот постои, испративме линк за нова лозинка',newPassT:'Нова лозинка',newPass:'Внеси нова лозинка (мин. 6 знаци)',passDone:'Лозинката е променета',share:'Сподели',copied:'Линкот е копиран',filt:'Филтри',hidB:'Скриен',rooms:'соби'},
-en:{brand:'Пазарче',pageTitle:'Пазарче – classifieds in North Macedonia',post:'Post a listing',search:'Search listings…',all:'All',allCities:'All cities',max:'Max price €',n:'listings',new:'Newest',lo:'Price: low → high',hi:'Price: high → low',call:'Call',cancel:'Cancel',publish:'Publish',ptitle:'New listing',title:'Title',category:'Category',city:'City',priceEur:'Price (€)',phone:'Phone',desc:'Description',none:'No listings match these filters. Try another city or category.',done:'Listing published',close:'Close',free:'Free',login:'Log in',reg:'Register',logout:'Log out',name:'Name',email:'Email',pass:'Password (min. 6 characters)',haveAcc:'Already have an account? Log in',noAcc:'No account yet? Register',bad:'Wrong email or password',exists:'An account with this email already exists',welcome:'Welcome',needLogin:'Register or log in to post a listing',cond:'Condition',anyCond:'Any condition',newC:'New',usedC:'Used',photo:'Photos (up to 6)',top:'TOP',bye:'You’re logged out',browse:'All listings',saved:'Saved',mine:'My listings',needLogin2:'Log in to see your listings',needLoginFav:'Log in to save listings',needLoginRep:'Log in to report a listing',noFav:'No saved listings yet. Tap the heart on a listing to save it.',noMine:'You haven’t posted anything yet. Press “Post a listing”.',del:'Delete',confirmDel:'Delete this listing?',renew:'Renew',report:'Report',reportT:'Report listing',reason:'Reason',note:'Note (optional)',send:'Send',r1:'Scam or fake listing',r2:'Wrong category',r3:'Already sold',r4:'Prohibited item',reported:'Report sent',dup:'You already reported this listing',deleted:'Listing deleted',renewed:'Listing renewed',confirm:'Check your email to confirm your account, then log in',err:'Something went wrong. Please try again.',cfg:'The site isn’t connected to Supabase yet.',rate:'Too many attempts. Please wait a bit.',limit:'Daily limit of 10 listings reached',susp:'Your account has been suspended',loading:'Loading…',today:'today',edit:'Edit',editT:'Edit listing',save:'Save',upd:'Listing updated',maxPh:'Maximum 6 photos per listing',forgot:'Forgot password?',needEmail:'Enter your email first',resetSent:'If an account exists, we sent a password reset link',newPassT:'New password',newPass:'Enter a new password (min. 6 characters)',passDone:'Password changed',share:'Share',copied:'Link copied',filt:'Filters',hidB:'Hidden',rooms:'rooms'},
-sq:{brand:'Pazarçe',pageTitle:'Pazarçe – njoftime nga Maqedonia e Veriut',post:'Posto njoftim',search:'Kërko njoftime…',all:'Të gjitha',allCities:'Të gjitha qytetet',max:'Çmimi maks. €',n:'njoftime',new:'Më të rejat',lo:'Çmimi: nga i ulëti te i larti',hi:'Çmimi: nga i larti te i ulëti',call:'Telefono',cancel:'Anulo',publish:'Publiko',ptitle:'Njoftim i ri',title:'Titulli',category:'Kategoria',city:'Qyteti',priceEur:'Çmimi (€)',phone:'Telefoni',desc:'Përshkrimi',none:'Nuk ka njoftime për këto filtra. Provo një qytet ose kategori tjetër.',done:'Njoftimi u publikua',close:'Mbyll',free:'Falas',login:'Hyr',reg:'Regjistrohu',logout:'Dil',name:'Emri',email:'Email',pass:'Fjalëkalimi (min. 6 karaktere)',haveAcc:'Ke tashmë llogari? Hyr',noAcc:'Nuk ke llogari? Regjistrohu',bad:'Email ose fjalëkalim i gabuar',exists:'Ekziston tashmë një llogari me këtë email',welcome:'Mirë se erdhe',needLogin:'Regjistrohu ose hyr për të postuar një njoftim',cond:'Gjendja',anyCond:'Çdo gjendje',newC:'I ri',usedC:'I përdorur',photo:'Foto (deri në 6)',top:'TOP',bye:'Ke dalë nga llogaria',browse:'Të gjitha njoftimet',saved:'Të ruajtura',mine:'Njoftimet e mia',needLogin2:'Hyr për të parë njoftimet e tua',needLoginFav:'Hyr për të ruajtur njoftime',needLoginRep:'Hyr për të raportuar një njoftim',noFav:'Ende nuk ke njoftime të ruajtura. Shtyp zemrën te një njoftim për ta ruajtur.',noMine:'Ende nuk ke postuar asgjë. Shtyp “Posto njoftim”.',del:'Fshi',confirmDel:'Ta fshij njoftimin?',renew:'Rinovo',report:'Raporto',reportT:'Raporto njoftimin',reason:'Arsyeja',note:'Shënim (opsional)',send:'Dërgo',r1:'Mashtrim ose njoftim i rremë',r2:'Kategori e gabuar',r3:'Tashmë i shitur',r4:'Send i ndaluar',reported:'Raportimi u dërgua',dup:'E ke raportuar tashmë këtë njoftim',deleted:'Njoftimi u fshi',renewed:'Njoftimi u rinovua',confirm:'Kontrollo email-in dhe konfirmo llogarinë, pastaj hyr',err:'Diçka shkoi keq. Provo përsëri.',cfg:'Faqja ende nuk është lidhur me bazën e të dhënave (Supabase).',rate:'Shumë përpjekje. Prit pak.',limit:'U arrit kufiri ditor prej 10 njoftimesh',susp:'Llogaria jote është pezulluar',loading:'Po ngarkohet…',today:'sot',edit:'Ndrysho',editT:'Ndrysho njoftimin',save:'Ruaj',upd:'Njoftimi u përditësua',maxPh:'Maksimumi 6 foto për njoftim',forgot:'E harrove fjalëkalimin?',needEmail:'Shkruaj fillimisht email-in',resetSent:'Nëse llogaria ekziston, dërguam një lidhje për fjalëkalim të ri',newPassT:'Fjalëkalim i ri',newPass:'Shkruaj fjalëkalimin e ri (min. 6 karaktere)',passDone:'Fjalëkalimi u ndryshua',share:'Ndaj',copied:'Lidhja u kopjua',filt:'Filtra',hidB:'I fshehur',rooms:'dhoma'}};
+mk:{brand:'Пазарче',heroT:'Купувај и продавај низ цела Македонија',heroP:'Бесплатни огласи за возила, недвижности, електроника, работа и повеќе.',postFree:'Објави оглас бесплатно',minP:'Мин. цена €',clearF:'Исчисти филтри',newB:'НОВО',vList:'Листа',vGrid:'Мрежа',acct:'Мојата сметка',accT:'Мојата сметка',profile:'Профил',defPhone:'Телефон за огласи (по избор)',saveProf:'Зачувај профил',profSaved:'Профилот е зачуван',secT:'Безбедност',chPass:'Промени лозинка',chEmail:'Промени е-пошта',newEmail:'Нова е-пошта',emailSent:'Испратена е порака за потврда на новата адреса',delAcc:'Избриши сметка',delAccWarn:'Ова трајно ги брише вашата сметка, сите ваши огласи и фотографии. Не може да се врати. Да продолжам?',delAccDone:'Сметката е избришана',fHelp:'Помош',fPrivacy:'Политика за приватност',fTerms:'Услови за користење',fSafety:'Безбедно тргување',fContact:'Контакт',pageTitle:'Пазарче – огласи од Македонија',post:'Објави оглас',search:'Барај огласи…',all:'Сите',allCities:'Сите градови',max:'Макс. цена €',n:'огласи',new:'Најнови',lo:'Цена: ниска → висока',hi:'Цена: висока → ниска',call:'Повикај',cancel:'Откажи',publish:'Објави',ptitle:'Нов оглас',title:'Наслов',category:'Категорија',city:'Град',priceEur:'Цена (€)',phone:'Телефон',desc:'Опис',none:'Нема огласи за овие филтри. Пробај друг град или категорија.',done:'Огласот е објавен',close:'Затвори',free:'Бесплатно',login:'Најава',reg:'Регистрација',logout:'Одјава',name:'Име',email:'Е-пошта',pass:'Лозинка (мин. 6 знаци)',haveAcc:'Веќе имаш профил? Најави се',noAcc:'Немаш профил? Регистрирај се',bad:'Погрешна е-пошта или лозинка',exists:'Профил со оваа е-пошта веќе постои',welcome:'Добредојде',needLogin:'Регистрирај се или најави се за да објавиш оглас',cond:'Состојба',anyCond:'Сите состојби',newC:'Нов',usedC:'Користен',photo:'Слики (до 6)',top:'ТОП',bye:'Одјавени сте',browse:'Сите огласи',saved:'Зачувани',mine:'Мои огласи',needLogin2:'Најави се за да ги видиш твоите огласи',needLoginFav:'Најави се за да зачуваш огласи',needLoginRep:'Најави се за да пријавиш оглас',noFav:'Се уште немаш зачувани огласи. Тапни на срцето на оглас за да го зачуваш.',noMine:'Се уште немаш објавено огласи. Притисни „Објави оглас“.',del:'Избриши',confirmDel:'Да го избришам огласот?',renew:'Обнови',report:'Пријави',reportT:'Пријави оглас',reason:'Причина',note:'Забелешка (опционално)',send:'Испрати',r1:'Измама или лажен оглас',r2:'Погрешна категорија',r3:'Веќе продадено',r4:'Забранет предмет',reported:'Пријавата е испратена',dup:'Веќе го пријавивте овој оглас',deleted:'Огласот е избришан',renewed:'Огласот е обновен',confirm:'Провери ја е-поштата и потврди го профилот, па најави се',err:'Нешто тргна наопаку. Обиди се повторно.',cfg:'Сајтот сè уште не е поврзан со базата (Supabase).',rate:'Премногу обиди. Почекај малку.',limit:'Достигнат е дневниот лимит од 10 огласи',susp:'Вашиот профил е суспендиран',loading:'Се вчитува…',today:'денес',edit:'Уреди',editT:'Уреди оглас',save:'Зачувај',upd:'Огласот е ажуриран',maxPh:'Најмногу 6 слики по оглас',forgot:'Заборавена лозинка?',needEmail:'Прво внеси ја твојата е-пошта',resetSent:'Ако профилот постои, испративме линк за нова лозинка',newPassT:'Нова лозинка',newPass:'Внеси нова лозинка (мин. 6 знаци)',passDone:'Лозинката е променета',share:'Сподели',copied:'Линкот е копиран',filt:'Филтри',hidB:'Скриен',rooms:'соби'},
+en:{brand:'Пазарче',heroT:'Buy and sell across North Macedonia',heroP:'Free listings for vehicles, real estate, electronics, jobs and more.',postFree:'Post a listing for free',minP:'Min price €',clearF:'Clear filters',newB:'NEW',vList:'List',vGrid:'Grid',acct:'My account',accT:'My account',profile:'Profile',defPhone:'Phone for listings (optional)',saveProf:'Save profile',profSaved:'Profile saved',secT:'Security',chPass:'Change password',chEmail:'Change email',newEmail:'New email',emailSent:'A confirmation was sent to the new address',delAcc:'Delete account',delAccWarn:'This permanently deletes your account, all your listings and photos. It cannot be undone. Continue?',delAccDone:'Account deleted',fHelp:'Help',fPrivacy:'Privacy policy',fTerms:'Terms of use',fSafety:'Trade safely',fContact:'Contact',pageTitle:'Пазарче – classifieds in North Macedonia',post:'Post a listing',search:'Search listings…',all:'All',allCities:'All cities',max:'Max price €',n:'listings',new:'Newest',lo:'Price: low → high',hi:'Price: high → low',call:'Call',cancel:'Cancel',publish:'Publish',ptitle:'New listing',title:'Title',category:'Category',city:'City',priceEur:'Price (€)',phone:'Phone',desc:'Description',none:'No listings match these filters. Try another city or category.',done:'Listing published',close:'Close',free:'Free',login:'Log in',reg:'Register',logout:'Log out',name:'Name',email:'Email',pass:'Password (min. 6 characters)',haveAcc:'Already have an account? Log in',noAcc:'No account yet? Register',bad:'Wrong email or password',exists:'An account with this email already exists',welcome:'Welcome',needLogin:'Register or log in to post a listing',cond:'Condition',anyCond:'Any condition',newC:'New',usedC:'Used',photo:'Photos (up to 6)',top:'TOP',bye:'You’re logged out',browse:'All listings',saved:'Saved',mine:'My listings',needLogin2:'Log in to see your listings',needLoginFav:'Log in to save listings',needLoginRep:'Log in to report a listing',noFav:'No saved listings yet. Tap the heart on a listing to save it.',noMine:'You haven’t posted anything yet. Press “Post a listing”.',del:'Delete',confirmDel:'Delete this listing?',renew:'Renew',report:'Report',reportT:'Report listing',reason:'Reason',note:'Note (optional)',send:'Send',r1:'Scam or fake listing',r2:'Wrong category',r3:'Already sold',r4:'Prohibited item',reported:'Report sent',dup:'You already reported this listing',deleted:'Listing deleted',renewed:'Listing renewed',confirm:'Check your email to confirm your account, then log in',err:'Something went wrong. Please try again.',cfg:'The site isn’t connected to Supabase yet.',rate:'Too many attempts. Please wait a bit.',limit:'Daily limit of 10 listings reached',susp:'Your account has been suspended',loading:'Loading…',today:'today',edit:'Edit',editT:'Edit listing',save:'Save',upd:'Listing updated',maxPh:'Maximum 6 photos per listing',forgot:'Forgot password?',needEmail:'Enter your email first',resetSent:'If an account exists, we sent a password reset link',newPassT:'New password',newPass:'Enter a new password (min. 6 characters)',passDone:'Password changed',share:'Share',copied:'Link copied',filt:'Filters',hidB:'Hidden',rooms:'rooms'},
+sq:{brand:'Pazarçe',heroT:'Bli dhe shit në mbarë Maqedoninë',heroP:'Njoftime falas për automjete, patundshmëri, elektronikë, punë dhe më shumë.',postFree:'Posto njoftim falas',minP:'Çmimi min. €',clearF:'Pastro filtrat',newB:'E RE',vList:'Listë',vGrid:'Rrjetë',acct:'Llogaria ime',accT:'Llogaria ime',profile:'Profili',defPhone:'Telefoni për njoftime (opsionale)',saveProf:'Ruaj profilin',profSaved:'Profili u ruajt',secT:'Siguria',chPass:'Ndrysho fjalëkalimin',chEmail:'Ndrysho emailin',newEmail:'Email i ri',emailSent:'Një mesazh konfirmimi u dërgua në adresën e re',delAcc:'Fshi llogarinë',delAccWarn:'Kjo fshin përgjithmonë llogarinë, të gjitha njoftimet dhe fotot tuaja. Nuk mund të kthehet. Të vazhdoj?',delAccDone:'Llogaria u fshi',fHelp:'Ndihma',fPrivacy:'Politika e privatësisë',fTerms:'Kushtet e përdorimit',fSafety:'Tregtim i sigurt',fContact:'Kontakt',pageTitle:'Pazarçe – njoftime nga Maqedonia e Veriut',post:'Posto njoftim',search:'Kërko njoftime…',all:'Të gjitha',allCities:'Të gjitha qytetet',max:'Çmimi maks. €',n:'njoftime',new:'Më të rejat',lo:'Çmimi: nga i ulëti te i larti',hi:'Çmimi: nga i larti te i ulëti',call:'Telefono',cancel:'Anulo',publish:'Publiko',ptitle:'Njoftim i ri',title:'Titulli',category:'Kategoria',city:'Qyteti',priceEur:'Çmimi (€)',phone:'Telefoni',desc:'Përshkrimi',none:'Nuk ka njoftime për këto filtra. Provo një qytet ose kategori tjetër.',done:'Njoftimi u publikua',close:'Mbyll',free:'Falas',login:'Hyr',reg:'Regjistrohu',logout:'Dil',name:'Emri',email:'Email',pass:'Fjalëkalimi (min. 6 karaktere)',haveAcc:'Ke tashmë llogari? Hyr',noAcc:'Nuk ke llogari? Regjistrohu',bad:'Email ose fjalëkalim i gabuar',exists:'Ekziston tashmë një llogari me këtë email',welcome:'Mirë se erdhe',needLogin:'Regjistrohu ose hyr për të postuar një njoftim',cond:'Gjendja',anyCond:'Çdo gjendje',newC:'I ri',usedC:'I përdorur',photo:'Foto (deri në 6)',top:'TOP',bye:'Ke dalë nga llogaria',browse:'Të gjitha njoftimet',saved:'Të ruajtura',mine:'Njoftimet e mia',needLogin2:'Hyr për të parë njoftimet e tua',needLoginFav:'Hyr për të ruajtur njoftime',needLoginRep:'Hyr për të raportuar një njoftim',noFav:'Ende nuk ke njoftime të ruajtura. Shtyp zemrën te një njoftim për ta ruajtur.',noMine:'Ende nuk ke postuar asgjë. Shtyp “Posto njoftim”.',del:'Fshi',confirmDel:'Ta fshij njoftimin?',renew:'Rinovo',report:'Raporto',reportT:'Raporto njoftimin',reason:'Arsyeja',note:'Shënim (opsional)',send:'Dërgo',r1:'Mashtrim ose njoftim i rremë',r2:'Kategori e gabuar',r3:'Tashmë i shitur',r4:'Send i ndaluar',reported:'Raportimi u dërgua',dup:'E ke raportuar tashmë këtë njoftim',deleted:'Njoftimi u fshi',renewed:'Njoftimi u rinovua',confirm:'Kontrollo email-in dhe konfirmo llogarinë, pastaj hyr',err:'Diçka shkoi keq. Provo përsëri.',cfg:'Faqja ende nuk është lidhur me bazën e të dhënave (Supabase).',rate:'Shumë përpjekje. Prit pak.',limit:'U arrit kufiri ditor prej 10 njoftimesh',susp:'Llogaria jote është pezulluar',loading:'Po ngarkohet…',today:'sot',edit:'Ndrysho',editT:'Ndrysho njoftimin',save:'Ruaj',upd:'Njoftimi u përditësua',maxPh:'Maksimumi 6 foto për njoftim',forgot:'E harrove fjalëkalimin?',needEmail:'Shkruaj fillimisht email-in',resetSent:'Nëse llogaria ekziston, dërguam një lidhje për fjalëkalim të ri',newPassT:'Fjalëkalim i ri',newPass:'Shkruaj fjalëkalimin e ri (min. 6 karaktere)',passDone:'Fjalëkalimi u ndryshua',share:'Ndaj',copied:'Lidhja u kopjua',filt:'Filtra',hidB:'I fshehur',rooms:'dhoma'}};
 var LI={mk:0,en:1,sq:2},LANGS=['mk','sq','en'];
 /* key, emoji, mk, en, color, sq */
 var CATS=[['car','🚗','Возила','Vehicles','#dbe9f7','Automjete'],['home','🏠','Недвижности','Real estate','#f3e3cf','Patundshmëri'],['tech','📱','Електроника','Electronics','#e0e0f5','Elektronikë'],['house','🛋️','Дом и градина','Home & garden','#e2f0d9','Shtëpi dhe kopsht'],['fash','👕','Облека','Fashion','#f5dde8','Veshje'],['job','💼','Работа','Jobs','#f0ecd0','Punë'],['serv','🔧','Услуги','Services','#d9efee','Shërbime'],['pet','🐕','Миленичиња','Pets','#f4e2d4','Kafshë shtëpiake'],['part','🔩','Авто делови и гуми','Auto parts & tires','#e6e6e6','Pjesë këmbimi dhe goma'],['mach','🚜','Машини и трактори','Machinery & tractors','#e8efd2','Makineri dhe traktorë'],['appl','🧊','Бела техника','Appliances','#d8eaf0','Pajisje shtëpiake'],['kids','🧸','Играчки и бебиња','Toys & baby','#f7e6c9','Lodra dhe bebe'],['sport','⚽','Спорт и рекреација','Sports','#d6efdc','Sport dhe rekreacion'],['build','🧱','Градежни материјали','Building materials','#efdcd2','Materiale ndërtimi']];
@@ -210,7 +265,7 @@ var MAXPH=6;
 function pickLang(){
   var p=new URLSearchParams(location.search).get('lang');if(LANGS.indexOf(p)>-1)return p;
   try{var s=localStorage.getItem('lang');if(LANGS.indexOf(s)>-1)return s}catch(e){}
-  return /^sq/i.test(navigator.language||'')?'sq':'mk';
+  return 'mk';
 }
 var L=pickLang();
 var D=[],cat='all',U=null,mode='reg',view='all',RT=null,FAV=new Set(),lastUid,loaded=false,EDIT=null,KEEP=[],NEW=[],ORIG=[],PEND=null,favReady=false;
@@ -273,7 +328,7 @@ async function toggleFav(id){
 function resize(file,max,q){return new Promise(function(ok,no){var im=new Image(),u=URL.createObjectURL(file);im.onload=function(){var s=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(function(b){b?ok(b):no(new Error('img'))},'image/jpeg',q)};im.onerror=function(){URL.revokeObjectURL(u);no(new Error('img'))};im.src=u})}
 
 /* ───── UI helpers ───── */
-function buildTabs(){var t=T[L];$('tabs').innerHTML='';[['all',t.browse],['fav','♥ '+t.saved+' ('+FAV.size+')'],['mine',t.mine]].forEach(function(v){var b=el('button','chip',v[1]);b.setAttribute('aria-pressed',view==v[0]);b.onclick=function(){if(v[0]!='all'&&!U){authOpen('login',v[0]=='mine'?t.needLogin2:t.needLoginFav);return}view=v[0];buildTabs();render()};$('tabs').appendChild(b)})}
+function buildTabs(){var t=T[L];$('tabs').innerHTML='';[['all',t.browse],['fav','♥ '+t.saved+' ('+FAV.size+')'],['mine',t.mine]].forEach(function(v){var b=el('button','chip',v[1]);b.setAttribute('aria-pressed',view==v[0]);b.onclick=function(){if(v[0]!='all'&&!U){authOpen('login',v[0]=='mine'?t.needLogin2:t.needLoginFav);return}view=v[0];buildTabs();render()};$('tabs').appendChild(b)});$('hfn').textContent=FAV.size}
 function xfields(){
   var c=$('pcat').value,box=$('xf');box.textContent='';
   (FIELDS[c]||[]).forEach(function(f){
@@ -320,9 +375,16 @@ function labels(){
   $('lang').value=L;$('brand').textContent='🛒 '+t.brand;
   $('post').textContent=t.post;$('fab').textContent='+ '+t.post;$('q').placeholder=t.search;$('max').placeholder=t.max;
   $('cancel').textContent=t.cancel;
-  $('login').textContent='';$('login').appendChild(document.createTextNode(U?t.logout:t.login));
-  if(U){var nm=el('span','nm',' ('+U.name+')');$('login').appendChild(nm)}
+  $('login').textContent=t.login;$('login').style.display=U?'none':'';
+  $('hfav').hidden=!U;$('acct').hidden=!U;$('hfav').setAttribute('aria-label',t.saved);
+  $('acn').textContent=U?' '+U.name:'';$('acct').setAttribute('aria-label',t.acct);$('acct').title=t.acct;
   $('reg').style.display=U?'none':'';$('reg').textContent=t.reg;
+  $('heroT').textContent=t.heroT;$('heroP').textContent=t.heroP;$('hpost').textContent='+ '+t.postFree;
+  $('min').placeholder=t.minP;$('fclr').textContent=t.clearF;
+  var q2=L=='mk'?'':'?lang='+L;
+  $('fl').textContent='';[['help',t.fHelp],['safety',t.fSafety],['privacy',t.fPrivacy],['terms',t.fTerms],['contact',t.fContact]].forEach(function(x){var a=el('a','',x[1]);a.href='/'+x[0]+'.html'+q2;$('fl').appendChild(a)});
+  $('fc').textContent='© '+new Date().getFullYear()+' '+t.brand;
+  setVT();
   $('aforgot').textContent=t.forgot;$('rcsave').textContent=t.save;
   var cv=$('cond').value||'all';$('cond').innerHTML='<option value="all">'+t.anyCond+'</option><option value="new">'+t.newC+'</option><option value="used">'+t.usedC+'</option>';$('cond').value=cv;$('rcancel').textContent=t.cancel;$('rsend').textContent=t.send;
   $('rreason').innerHTML=[['r1',t.r1],['r2',t.r2],['r3',t.r3],['r4',t.r4]].map(function(x){return'<option value="'+x[0]+'">'+x[1]+'</option>'}).join('');
@@ -345,11 +407,11 @@ function labels(){
 }
 
 function render(){
-  var t=T[L],q=$('q').value.trim().toLowerCase(),cd=$('cond').value,city=$('city').value,mx=parseFloat($('max').value),s=$('sort').value;
-  var nf=(city!='all'?1:0)+(!isNaN(mx)?1:0)+(cd!='all'?1:0)+(s!='new'?1:0);
-  $('ftog').textContent='⚙ '+t.filt+(nf?' ('+nf+')':'');
+  var t=T[L],q=$('q').value.trim().toLowerCase(),cd=$('cond').value,city=$('city').value,mx=parseFloat($('max').value),mn=parseFloat($('min').value),s=$('sort').value;
+  var nf=(city!='all'?1:0)+(!isNaN(mx)?1:0)+(!isNaN(mn)?1:0)+(cd!='all'?1:0)+(s!='new'?1:0);
+  $('ftog').textContent='⚙ '+t.filt+(nf?' ('+nf+')':'');$('fclr').hidden=!(nf||q);
   var r=D.filter(function(d){
-    return(view=='all'||(view=='fav'&&FAV.has(d.id))||(view=='mine'&&U&&d.owner==U.id))&&(cat=='all'||d.c==cat)&&(cd=='all'||d.cond==cd)&&(city=='all'||d.city==city)&&(isNaN(mx)||d.p<=mx)&&(!q||(d.t+' '+d.dm).toLowerCase().indexOf(q)>-1)});
+    return(view=='all'||(view=='fav'&&FAV.has(d.id))||(view=='mine'&&U&&d.owner==U.id))&&(cat=='all'||d.c==cat)&&(cd=='all'||d.cond==cd)&&(city=='all'||d.city==city)&&(isNaN(mx)||d.p<=mx)&&(isNaN(mn)||d.p>=mn)&&(!q||(d.t+' '+d.dm).toLowerCase().indexOf(q)>-1)});
   r.sort(function(a,b){return(b.top?1:0)-(a.top?1:0)||(s=='lo'?a.p-b.p:s=='hi'?b.p-a.p:a.age-b.age)});
   $('count').textContent=r.length+' '+t.n;
   var g=$('grid');g.textContent='';
@@ -360,11 +422,13 @@ function render(){
     var pic=el('div','pic');
     if(d.img)pic.appendChild(mkImg(d.img,d.t,true));else{pic.style.background=c[4];pic.appendChild(document.createTextNode(c[1]))}
     if(d.top)pic.appendChild(el('span','top',t.top));
+    if(d.age<=1&&!d.hid)pic.appendChild(el('span','nb',t.newB));
     if(d.hid)pic.appendChild(el('span','hid',t.hidB));
     if(d.imgs.length>1)pic.appendChild(el('span','cnt','📷 '+d.imgs.length));
     pic.appendChild(el('span','price',eur(d.p)));
     var info=el('div','info');info.appendChild(el('b','',d.t));
     var sh=short(d);if(sh)info.appendChild(el('span','meta sp',sh));
+    if(d.dm)info.appendChild(el('span','meta dsc',d.dm));
     info.appendChild(el('span','meta',ci(d.city)+' · '+ago(d.age)));
     a.appendChild(pic);a.appendChild(info);
     var w=el('div','cw');w.appendChild(a);
@@ -425,7 +489,7 @@ function openEdit(d){
 }
 function startPost(){
   if(!U){authOpen('reg',T[L].needLogin);return}
-  EDIT=null;KEEP=[];NEW=[];ORIG=[];$('pf').reset();xfields();
+  EDIT=null;KEEP=[];NEW=[];ORIG=[];$('pf').reset();xfields();if(U&&U.phone)$('pf').elements['phone'].value=U.phone;
   $('ptitle').textContent=T[L].ptitle;$('publish').textContent=T[L].publish;renderPics();$('form').showModal();
 }
 
@@ -433,15 +497,62 @@ function startPost(){
 function setLang(l){L=l;try{localStorage.setItem('lang',l)}catch(e){}labels();render()}
 $('lang').onchange=function(){setLang(this.value)};
 $('ftog').onclick=function(){var o=$('filters').classList.toggle('open');this.setAttribute('aria-expanded',o)};
-['q','max'].forEach(function(i){$(i).oninput=render});['city','sort','cond'].forEach(function(i){$(i).onchange=render});
+['q','min','max'].forEach(function(i){$(i).oninput=render});['city','sort','cond'].forEach(function(i){$(i).onchange=render});
 function authOpen(m,msg){mode=m;var t=T[L];$('atitle').textContent=m=='reg'?t.reg:t.login;$('nameL').style.display=m=='reg'?'':'none';$('aname').required=m=='reg';$('apass').autocomplete=m=='reg'?'new-password':'current-password';$('asubmit').textContent=m=='reg'?t.reg:t.login;$('aswitch').textContent=m=='reg'?t.haveAcc:t.noAcc;$('aforgot').style.display=m=='login'?'':'none';$('acancel').textContent=t.cancel;$('aerr').textContent=msg||'';if(!$('auth').open)$('auth').showModal()}
 $('aswitch').onclick=function(){authOpen(mode=='reg'?'login':'reg')};
 $('acancel').onclick=function(){$('auth').close()};
 $('pcat').onchange=xfields;
 $('rcancel').onclick=function(){$('rep').close()};
 $('reg').onclick=function(){authOpen('reg')};
-$('login').onclick=function(){if(U){sb.auth.signOut().then(function(){toast(T[L].bye)})}else authOpen('login')};
-$('post').onclick=startPost;$('fab').onclick=startPost;
+$('login').onclick=function(){authOpen('login')};
+$('post').onclick=startPost;$('fab').onclick=startPost;$('hpost').onclick=startPost;
+$('fclr').onclick=function(){$('q').value='';$('min').value='';$('max').value='';$('city').value='all';$('cond').value='all';$('sort').value='new';render()};
+var LV=false;try{LV=localStorage.getItem('lv')=='list'}catch(e){}
+function setVT(){var t=T[L];$('grid').classList.toggle('list',LV);$('vtog').textContent=LV?'▦ '+t.vGrid:'☰ '+t.vList}
+$('vtog').onclick=function(){LV=!LV;try{localStorage.setItem('lv',LV?'list':'grid')}catch(e){}setVT()};
+$('hfav').onclick=function(){view='fav';buildTabs();render();window.scrollTo({top:0,behavior:'smooth'})};
+function openAcc(){
+  var t=T[L];if(!U)return;
+  $('accmail').textContent=U.e;$('accname').value=U.name;$('accphone').value=U.phone||'';$('accerr').textContent='';
+  $('accmine').textContent=t.mine+' ('+D.filter(function(d){return d.owner==U.id}).length+')';$('accfav').textContent='♥ '+t.saved+' ('+FAV.size+')';
+  $('acc').showModal();
+}
+$('acct').onclick=openAcc;$('accclose').onclick=function(){$('acc').close()};
+$('accmine').onclick=function(){$('acc').close();view='mine';buildTabs();render();window.scrollTo({top:0,behavior:'smooth'})};
+$('accfav').onclick=function(){$('acc').close();view='fav';buildTabs();render();window.scrollTo({top:0,behavior:'smooth'})};
+$('accout').onclick=function(){$('acc').close();if(sb)sb.auth.signOut().then(function(){toast(T[L].bye)})};
+$('pfrm').onsubmit=async function(e){
+  e.preventDefault();var t=T[L];$('accerr').textContent='';
+  var nm=$('accname').value.trim(),ph=$('accphone').value.trim();
+  if(nm.length<1){$('accerr').textContent=t.name;return}
+  var r=await sb.auth.updateUser({data:{name:nm,phone:ph}});
+  if(r.error){$('accerr').textContent=t.err;return}
+  toast(t.profSaved);
+};
+$('pwf').onsubmit=async function(e){
+  e.preventDefault();var t=T[L];$('accerr').textContent='';
+  var r=await sb.auth.updateUser({password:$('accpw').value});
+  if(r.error){$('accerr').textContent=r.error.message||t.err;return}
+  $('pwf').reset();toast(t.passDone);
+};
+$('emf').onsubmit=async function(e){
+  e.preventDefault();var t=T[L];$('accerr').textContent='';
+  var r=await sb.auth.updateUser({email:$('accem').value.trim().toLowerCase()},{emailRedirectTo:location.origin});
+  if(r.error){$('accerr').textContent=/rate|limit/i.test(r.error.message||'')?t.rate:(r.error.message||t.err);return}
+  $('emf').reset();toast(t.emailSent,5000);
+};
+$('accdel').onclick=async function(){
+  var t=T[L];if(!U||!confirm(t.delAccWarn))return;
+  var b=$('accdel');b.disabled=true;
+  try{
+    var st=sb.storage.from('listing-photos'),ls=await st.list(U.id,{limit:1000});
+    if(ls.data&&ls.data.length)await st.remove(ls.data.map(function(f){return U.id+'/'+f.name}));
+    var r=await sb.rpc('delete_my_account');
+    if(r.error)throw r.error;
+    $('acc').close();await sb.auth.signOut();toast(t.delAccDone,4000);
+  }catch(err){$('accerr').textContent=t.err}
+  finally{b.disabled=false}
+};
 $('cancel').onclick=function(){$('form').close()};
 $('pphoto').onchange=function(){var fs=Array.prototype.slice.call(this.files).filter(function(x){return x&&x.size});this.value='';if(KEEP.length+NEW.length+fs.length>MAXPH){toast(T[L].maxPh,3000);fs=fs.slice(0,Math.max(0,MAXPH-KEEP.length-NEW.length))}NEW=NEW.concat(fs);renderPics()};
 
@@ -542,7 +653,7 @@ labels();render();
 if(sb){
   sb.auth.onAuthStateChange(function(ev,s){
     var u=s&&s.user;
-    U=u?{id:u.id,e:u.email,name:(u.user_metadata&&u.user_metadata.name)||String(u.email).split('@')[0]}:null;
+    U=u?{id:u.id,e:u.email,name:(u.user_metadata&&u.user_metadata.name)||String(u.email).split('@')[0],phone:(u.user_metadata&&u.user_metadata.phone)||''}:null;
     var uid=U?U.id:null,changed=uid!==lastUid;lastUid=uid;
     /* run outside the callback: calling Supabase from inside it can deadlock */
     setTimeout(function(){
