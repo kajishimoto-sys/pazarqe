@@ -28,5 +28,4 @@ export async function onRequest({ request: req }) {
       'cache-control': 'public, max-age=0, must-revalidate',
     },
   });
-};
-
+}
