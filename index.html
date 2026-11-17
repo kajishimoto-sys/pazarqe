@@ -228,6 +228,13 @@ header::after{content:"";display:block;height:9px;background:var(--awn)}
 <script>try{if(!localStorage.getItem('lv2')){localStorage.setItem('lv2','1');localStorage.removeItem('lv')}}catch(e){}</script>
 <style id="mobile-shell">
 .tabbar{display:none}
+html,body{overflow-x:clip}
+@media (max-width:640px){
+  .fbar{flex-wrap:wrap;gap:8px}
+  .fbar .ftog{order:1}.fbar .count{order:2;margin-left:auto}.fbar .vt{order:3}.fbar .fclr{order:4;white-space:nowrap}
+  body:has(input:focus) .tabbar{display:none}
+}
+
 .heart{display:grid;place-items:center;padding:0}.heart svg{display:block}
 main .cta{margin-top:90px}
 @media (max-width:640px){
