@@ -225,6 +225,50 @@ header::after{content:"";display:block;height:9px;background:var(--awn)}
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>try{if(!localStorage.getItem('lv2')){localStorage.setItem('lv2','1');localStorage.removeItem('lv')}}catch(e){}</script>
+<style id="mobile-shell">
+.tabbar{display:none}
+.heart{display:grid;place-items:center;padding:0}.heart svg{display:block}
+main .cta{margin-top:90px}
+@media (max-width:640px){
+  body{padding-bottom:calc(70px + env(safe-area-inset-bottom,0px))}
+  /* ---- slim top bar: logo, language, admin only ---- */
+  header .bar{flex-wrap:nowrap;gap:8px;padding:8px 12px}
+  header .logo{margin-right:auto;min-width:0;white-space:nowrap}
+  #qbtn,#hfav,#acct,#reg,#post,#login{display:none!important}
+  #adm{padding:5px 10px;min-height:34px;font-size:13px}
+  .lang{min-height:36px;padding:5px 9px}
+  .fab{display:none!important}
+  /* ---- search first, like an app ---- */
+  .hero{display:block;background:none;color:var(--ink);padding:2px 0 0;margin:0 0 6px;border-radius:0;box-shadow:none}
+  .hero::before{display:none}
+  .hero h1{font-size:17px;line-height:1.25;margin:0 0 10px;color:var(--ink)}
+  .hero>div>p,.hero .hs,#hpost{display:none}
+  .hero .search{margin:0;max-width:none}
+  .hero .search input{padding:14px 16px 14px 46px;font-size:16px;border-radius:14px;border:1.5px solid var(--line);box-shadow:var(--sh);color:var(--ink);background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a9690' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") no-repeat 15px center/20px}
+  /* ---- round category icons in one swipeable row ---- */
+  #cats.tiles{display:flex;overflow-x:auto;gap:2px;background:none;border:0;box-shadow:none;padding:4px 0 8px;margin:0 0 6px;scroll-snap-type:x proximity}
+  #cats.tiles::before{display:none}
+  #cats.tiles .chip{width:86px;flex:none;font-size:11.5px;padding:8px 2px;overflow-wrap:anywhere;hyphens:auto;scroll-snap-align:start}
+  #cats.tiles .chip .em{width:58px;height:58px;border-radius:50%}
+  /* ---- photo-first cards ---- */
+  .grid:not(.list){gap:10px}
+  .grid:not(.list) .card{border-radius:14px}
+  .sh{margin:12px 0 8px}.sh h2{font-size:19px}
+  main .cta{margin:64px 0 6px}
+  /* ---- bottom tab bar ---- */
+  .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:7;align-items:flex-end;justify-content:space-around;background:var(--surface);border-top:1px solid var(--line);padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 22px -14px rgba(28,42,51,.45)}
+  .tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:var(--mute);font:600 10.5px/1.1 inherit;font-family:inherit;padding:6px 1px;min-width:0;min-height:52px;cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent}
+  .tabbar button.on{color:var(--sel)}
+  .tabbar svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .tabbar .plus .circ{width:54px;height:54px;border-radius:50%;background:var(--tag);color:var(--tag-ink);display:grid;place-items:center;margin-top:-28px;border:4px solid var(--surface);box-shadow:0 8px 18px -4px rgba(232,93,10,.55)}
+  .tabbar .plus svg{stroke:currentColor;stroke-width:2.4}
+  .tabbar .plus{color:var(--ink)}
+  .tabbar .lb{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tabbar .bd{position:absolute;top:2px;left:calc(50% + 6px);min-width:17px;height:17px;border-radius:9px;background:var(--tag);color:var(--tag-ink);font-size:10px;font-weight:700;display:grid;place-items:center;padding:0 4px}
+  .tabbar .bd[hidden]{display:none}
+}
+</style>
 </head>
 <body>
 <header><div class="bar">
@@ -353,7 +397,7 @@ en:{brand:'Пазарче',catT:'Categories',latestT:'Latest listings',hs1:'Free
 sq:{brand:'Pazarçe',catT:'Kategoritë',latestT:'Njoftimet e fundit',hs1:'Postim falas',hs2:'qytete',hs3:'Maqedonisht, shqip dhe anglisht',ctaT:'Keni diçka për të shitur?',ctaP:'Postoni njoftim falas për më pak se një minutë.',ssSave:'🔔 Ruaj kërkimin',ssName:'Emri i kërkimit',ssT:'Kërkime të ruajtura',ssNone:'Nuk keni kërkime të ruajtura.',ssDone:'Kërkimi u ruajt',ssLimit:'Më së shumti 7 kërkime të ruajtura',rvT:'Parë së fundmi',rvClear:'Pastro',sellerOnly:'Njoftime nga një shitës',sellerAll:'Shfaq të gjitha',k_sale:'Në shitje',k_rent:'Me qira',k_wanted:'Kërkohet për blerje',k_wantrent:'Kërkohet me qira',k_hiring:'Punësojmë',k_jobwanted:'Kërkoj punë',kindL:'Lloji i njoftimit',anyKind:'Të gjitha llojet',subL:'Nënkategoria',priceL:'Çmimi',ptL:'Lloji i çmimit',ptFixed:'Fikse',ptNeg:'Me marrëveshje',ptNegS:'me marrëveshje',ptFree:'Falas',ptSwap:'Këmbim',curL:'Monedha',videoL:'Link YouTube (opsionale)',badVideo:'Link YouTube i pavlefshëm',needPrice:'Vendosni çmimin',cover:'Kryesore',makeCover:'Bëje kryesore',contactL:'Kontakt edhe përmes:',curS:'MKD',heroT:'Bli dhe shit në mbarë Maqedoninë',heroP:'Njoftime falas për automjete, patundshmëri, elektronikë, punë dhe më shumë.',postFree:'Posto njoftim falas',minP:'Çmimi min. €',clearF:'Pastro filtrat',newB:'E RE',vList:'Listë',vGrid:'Rrjetë',acct:'Llogaria ime',accT:'Llogaria ime',profile:'Profili',defPhone:'Telefoni për njoftime (opsionale)',saveProf:'Ruaj profilin',profSaved:'Profili u ruajt',secT:'Siguria',chPass:'Ndrysho fjalëkalimin',chEmail:'Ndrysho emailin',newEmail:'Email i ri',emailSent:'Një mesazh konfirmimi u dërgua në adresën e re',delAcc:'Fshi llogarinë',delAccWarn:'Kjo fshin përgjithmonë llogarinë, të gjitha njoftimet dhe fotot tuaja. Nuk mund të kthehet. Të vazhdoj?',delAccDone:'Llogaria u fshi',fHelp:'Ndihma',fPrivacy:'Politika e privatësisë',fTerms:'Kushtet e përdorimit',fSafety:'Tregtim i sigurt',fContact:'Kontakt',pageTitle:'Pazarçe – njoftime nga Maqedonia e Veriut',post:'Posto njoftim',search:'Kërko njoftime…',all:'Të gjitha',allCities:'Të gjitha qytetet',max:'Çmimi maks. €',n:'njoftime',new:'Më të rejat',lo:'Çmimi: nga i ulëti te i larti',hi:'Çmimi: nga i larti te i ulëti',call:'Telefono',cancel:'Anulo',publish:'Publiko',ptitle:'Njoftim i ri',title:'Titulli',category:'Kategoria',city:'Qyteti',priceEur:'Çmimi (€)',phone:'Telefoni',desc:'Përshkrimi',none:'Nuk ka njoftime për këto filtra. Provo një qytet ose kategori tjetër.',done:'Njoftimi u publikua',close:'Mbyll',free:'Falas',login:'Hyr',reg:'Regjistrohu',logout:'Dil',name:'Emri',email:'Email',pass:'Fjalëkalimi (min. 6 karaktere)',haveAcc:'Ke tashmë llogari? Hyr',noAcc:'Nuk ke llogari? Regjistrohu',bad:'Email ose fjalëkalim i gabuar',exists:'Ekziston tashmë një llogari me këtë email',welcome:'Mirë se erdhe',needLogin:'Regjistrohu ose hyr për të postuar një njoftim',cond:'Gjendja',anyCond:'Çdo gjendje',newC:'I ri',usedC:'I përdorur',photo:'Foto (deri në 6)',top:'TOP',bye:'Ke dalë nga llogaria',browse:'Të gjitha njoftimet',saved:'Të ruajtura',mine:'Njoftimet e mia',needLogin2:'Hyr për të parë njoftimet e tua',needLoginFav:'Hyr për të ruajtur njoftime',needLoginRep:'Hyr për të raportuar një njoftim',noFav:'Ende nuk ke njoftime të ruajtura. Shtyp zemrën te një njoftim për ta ruajtur.',noMine:'Ende nuk ke postuar asgjë. Shtyp “Posto njoftim”.',del:'Fshi',confirmDel:'Ta fshij njoftimin?',renew:'Rinovo',report:'Raporto',reportT:'Raporto njoftimin',reason:'Arsyeja',note:'Shënim (opsional)',send:'Dërgo',r1:'Mashtrim ose njoftim i rremë',r2:'Kategori e gabuar',r3:'Tashmë i shitur',r4:'Send i ndaluar',reported:'Raportimi u dërgua',dup:'E ke raportuar tashmë këtë njoftim',deleted:'Njoftimi u fshi',renewed:'Njoftimi u rinovua',confirm:'Kontrollo email-in dhe konfirmo llogarinë, pastaj hyr',err:'Diçka shkoi keq. Provo përsëri.',cfg:'Faqja ende nuk është lidhur me bazën e të dhënave (Supabase).',rate:'Shumë përpjekje. Prit pak.',limit:'U arrit kufiri ditor prej 10 njoftimesh',susp:'Llogaria jote është pezulluar',loading:'Po ngarkohet…',today:'sot',edit:'Ndrysho',editT:'Ndrysho njoftimin',save:'Ruaj',upd:'Njoftimi u përditësua',maxPh:'Maksimumi 10 foto për njoftim',forgot:'E harrove fjalëkalimin?',needEmail:'Shkruaj fillimisht email-in',resetSent:'Nëse llogaria ekziston, dërguam një lidhje për fjalëkalim të ri',newPassT:'Fjalëkalim i ri',newPass:'Shkruaj fjalëkalimin e ri (min. 6 karaktere)',passDone:'Fjalëkalimi u ndryshua',share:'Ndaj',copied:'Lidhja u kopjua',filt:'Filtra',hidB:'I fshehur',rooms:'dhoma'}};
 var LI={mk:0,en:1,sq:2},LANGS=['mk','sq','en'];
 /* key, emoji, mk, en, color, sq */
-var CATS=[['car','🚗','Возила','Vehicles','#dbe9f7','Automjete'],['home','🏠','Недвижности','Real estate','#f3e3cf','Patundshmëri'],['tech','📱','Електроника','Electronics','#e0e0f5','Elektronikë'],['house','🛋️','Дом и градина','Home & garden','#e2f0d9','Shtëpi dhe kopsht'],['fash','👕','Облека','Fashion','#f5dde8','Veshje'],['job','💼','Работа','Jobs','#f0ecd0','Punë'],['serv','🔧','Услуги','Services','#d9efee','Shërbime'],['sport','⚽','Спорт и рекреација','Sports','#d6efdc','Sport dhe rekreacion'],['kids','🧸','Играчки и бебиња','Toys & baby','#f7e6c9','Lodra dhe bebe'],['pet','🐕','Миленичиња','Pets','#f4e2d4','Kafshë shtëpiake'],['mach','🚜','Машини и трактори','Machinery & tractors','#e8efd2','Makineri dhe traktorë'],['part','🔩','Авто делови и гуми','Auto parts & tires','#e6e6e6','Pjesë këmbimi dhe goma'],['appl','🧊','Бела техника','Appliances','#d8eaf0','Pajisje shtëpiake'],['build','🧱','Градежни материјали','Building materials','#efdcd2','Materiale ndërtimi']];
+var CATS=[['car','🚗','Возила','Vehicles','#dbe9f7','Automjete'],['home','🏠','Недвижности','Real estate','#f3e3cf','Patundshmëri'],['tech','📱','Електроника','Electronics','#e0e0f5','Elektronikë'],['house','🛋️','Дом и градина','Home & garden','#e2f0d9','Shtëpi dhe kopsht'],['fash','👕','Облека','Fashion','#f5dde8','Veshje'],['job','💼','Работа','Jobs','#f0ecd0','Punë'],['serv','🔧','Услуги','Services','#d9efee','Shërbime'],['sport','⚽','Спорт и рекреација','Sports','#d6efdc','Sport dhe rekreacion'],['pet','🐕','Миленичиња','Pets','#f4e2d4','Kafshë shtëpiake'],['part','🔩','Авто делови и гуми','Auto parts & tires','#e6e6e6','Pjesë këmbimi dhe goma'],['appl','🧊','Бела техника','Appliances','#d8eaf0','Pajisje shtëpiake'],['other','📦','Останато','Other','#e9e4f3','Të tjera']];
 /* mk, en, sq */
 var CITIES=[['Скопје','Skopje','Shkup'],['Битола','Bitola','Manastir'],['Куманово','Kumanovo','Kumanovë'],['Охрид','Ohrid','Ohër'],['Тетово','Tetovo','Tetovë'],['Прилеп','Prilep','Prilep'],['Струмица','Strumica','Strumicë'],['Велес','Veles','Veles'],['Штип','Štip','Shtip'],['Гостивар','Gostivar','Gostivar'],['Кавадарци','Kavadarci','Kavadar'],['Кочани','Kočani','Koçan'],['Кичево','Kičevo','Kërçovë'],['Струга','Struga','Strugë'],['Радовиш','Radoviš','Radovish'],['Гевгелија','Gevgelija','Gjevgjeli'],['Дебар','Debar','Dibër'],['Крива Паланка','Kriva Palanka','Kriva Pallankë'],['Свети Николе','Sveti Nikole','Sveti Nikollë'],['Неготино','Negotino','Negotinë'],['Делчево','Delčevo','Delçevë'],['Виница','Vinica','Vinicë'],['Ресен','Resen','Resnjë'],['Пробиштип','Probištip','Probishtip'],['Берово','Berovo','Berovë'],['Кратово','Kratovo','Kratovë'],['Крушево','Kruševo','Krushevë'],['Македонски Брод','Makedonski Brod','Brod'],['Демир Хисар','Demir Hisar','Demir Hisar'],['Валандово','Valandovo','Valandovë'],['Пехчево','Pehčevo','Pehçevë'],['Македонска Каменица','Makedonska Kamenica','Kamenicë'],['Богданци','Bogdanci','Bogdanci'],['Демир Капија','Demir Kapija','Demir Kapi'],['Василево','Vasilevo','Vasilevë'],['Кривогаштани','Krivogaštani','Krivogashtan'],['Вевчани','Vevčani','Vevçan'],['Лозово','Lozovo','Llozovë'],['Росоман','Rosoman','Rosoman'],['Могила','Mogila','Mogilë']];
 var OPT_YN=[['yes','Да','Yes','Po'],['no','Не','No','Jo']];
@@ -390,7 +434,7 @@ kids:[['toys','Играчки','Toys','Lodra'],['stroll','Колички и се
 sport:[['fit','Фитнес','Fitness','Fitnes'],['bike','Велосипеди','Bikes','Biçikleta'],['camp','Кампување','Camping','Kampim'],['other','Друго','Other','Tjetër']],
 build:[['mat','Материјали','Materials','Materiale'],['tools','Алат','Tools','Vegla'],['doors','Врати и прозорци','Doors & windows','Dyer dhe dritare']]};
 var KC={def:['sale','wanted'],home:['sale','rent','wanted','wantrent'],car:['sale','rent','wanted'],job:['hiring','jobwanted']};
-var ICONS={"all": "<rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\" rx=\"1.5\"/>", "car": "<path d=\"M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2\"/><circle cx=\"7\" cy=\"17\" r=\"2\"/><path d=\"M9 17h6\"/><circle cx=\"17\" cy=\"17\" r=\"2\"/>", "home": "<path d=\"M3 10.5 12 3l9 7.5\"/><path d=\"M5 9.5V21h14V9.5\"/><path d=\"M10 21v-6h4v6\"/>", "tech": "<rect x=\"6\" y=\"2\" width=\"12\" height=\"20\" rx=\"2\"/><path d=\"M11 18h2\"/>", "house": "<path d=\"M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3\"/><path d=\"M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H6v-2a2 2 0 0 0-4 0Z\"/><path d=\"M4 18v2M20 18v2\"/>", "fash": "<path d=\"M20.4 5.6 16 3l-1.5 1.5a3.5 3.5 0 0 1-5 0L8 3 3.6 5.6a1 1 0 0 0-.5 1.2l1 3.2a1 1 0 0 0 1 .7H7v9a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-9h1.9a1 1 0 0 0 1-.7l1-3.2a1 1 0 0 0-.5-1.2Z\"/>", "job": "<rect x=\"3\" y=\"7\" width=\"18\" height=\"13\" rx=\"2\"/><path d=\"M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2\"/><path d=\"M3 13h18\"/>", "serv": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z\"/>", "sport": "<circle cx=\"5.5\" cy=\"17.5\" r=\"3.5\"/><circle cx=\"18.5\" cy=\"17.5\" r=\"3.5\"/><circle cx=\"15\" cy=\"5\" r=\"1\"/><path d=\"m12 17.5-3-6 3-3h3l2 4\"/><path d=\"M9 11.5H6\"/>", "kids": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M8 14s1.5 2 4 2 4-2 4-2\"/><path d=\"M9 9h.01M15 9h.01\"/>", "pet": "<circle cx=\"11\" cy=\"4\" r=\"2\"/><circle cx=\"18\" cy=\"8\" r=\"2\"/><circle cx=\"4\" cy=\"8\" r=\"2\"/><circle cx=\"20\" cy=\"16\" r=\"2\"/><path d=\"M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.8 1.2c-.3-.8-.2-1.7-.9-2.5A5 5 0 0 1 9 10Z\"/>", "mach": "<path d=\"M2 20V8l6 4V8l6 4V4h4v16z\"/>", "part": "<circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1\"/>", "appl": "<rect x=\"5\" y=\"2\" width=\"14\" height=\"20\" rx=\"2\"/><path d=\"M5 10h14M9 6v1M9 13v3\"/>", "build": "<rect x=\"3\" y=\"4\" width=\"18\" height=\"16\" rx=\"1\"/><path d=\"M3 10h18M3 15h18M9 4v6M15 10v5M9 15v5\"/>"};
+var ICONS={"all": "<rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\" rx=\"1.5\"/>", "car": "<path d=\"M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2\"/><circle cx=\"7\" cy=\"17\" r=\"2\"/><path d=\"M9 17h6\"/><circle cx=\"17\" cy=\"17\" r=\"2\"/>", "home": "<path d=\"M3 10.5 12 3l9 7.5\"/><path d=\"M5 9.5V21h14V9.5\"/><path d=\"M10 21v-6h4v6\"/>", "tech": "<rect x=\"6\" y=\"2\" width=\"12\" height=\"20\" rx=\"2\"/><path d=\"M11 18h2\"/>", "house": "<path d=\"M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3\"/><path d=\"M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H6v-2a2 2 0 0 0-4 0Z\"/><path d=\"M4 18v2M20 18v2\"/>", "fash": "<path d=\"M20.4 5.6 16 3l-1.5 1.5a3.5 3.5 0 0 1-5 0L8 3 3.6 5.6a1 1 0 0 0-.5 1.2l1 3.2a1 1 0 0 0 1 .7H7v9a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-9h1.9a1 1 0 0 0 1-.7l1-3.2a1 1 0 0 0-.5-1.2Z\"/>", "job": "<rect x=\"3\" y=\"7\" width=\"18\" height=\"13\" rx=\"2\"/><path d=\"M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2\"/><path d=\"M3 13h18\"/>", "serv": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z\"/>", "sport": "<circle cx=\"5.5\" cy=\"17.5\" r=\"3.5\"/><circle cx=\"18.5\" cy=\"17.5\" r=\"3.5\"/><circle cx=\"15\" cy=\"5\" r=\"1\"/><path d=\"m12 17.5-3-6 3-3h3l2 4\"/><path d=\"M9 11.5H6\"/>", "kids": "<circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M8 14s1.5 2 4 2 4-2 4-2\"/><path d=\"M9 9h.01M15 9h.01\"/>", "pet": "<circle cx=\"11\" cy=\"4\" r=\"2\"/><circle cx=\"18\" cy=\"8\" r=\"2\"/><circle cx=\"4\" cy=\"8\" r=\"2\"/><circle cx=\"20\" cy=\"16\" r=\"2\"/><path d=\"M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.8 1.2c-.3-.8-.2-1.7-.9-2.5A5 5 0 0 1 9 10Z\"/>", "mach": "<path d=\"M2 20V8l6 4V8l6 4V4h4v16z\"/>", "part": "<circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1\"/>", "appl": "<rect x=\"5\" y=\"2\" width=\"14\" height=\"20\" rx=\"2\"/><path d=\"M5 10h14M9 6v1M9 13v3\"/>", "other": "<path d=\"M21 8 12 3 3 8v8l9 5 9-5z\"/><path d=\"m3 8 9 5 9-5M12 13v8\"/>", "build": "<rect x=\"3\" y=\"4\" width=\"18\" height=\"16\" rx=\"1\"/><path d=\"M3 10h18M3 15h18M9 4v6M15 10v5M9 15v5\"/>"};
 function ico(k){var e=el('span','em');e.innerHTML='<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(ICONS[k]||'')+'</svg>';return e}
 var KINDS=['sale','rent','wanted','wantrent','hiring','jobwanted'],RATE=61.5;
 var MAXPH=10;
@@ -405,7 +449,8 @@ var D=[],cat='all',U=null,mode='reg',view='all',RT=null,FAV=new Set(),lastUid,lo
 
 function $(i){return document.getElementById(i)}
 function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
-function cm(k){return CATS.filter(function(c){return c[0]==k})[0]||CATS[0]}
+var OLDCATS=[['kids','🧸','Играчки и бебиња','Toys & baby','#f7e6c9','Lodra dhe bebe'],['mach','🚜','Машини и трактори','Machinery & tractors','#e8efd2','Makineri dhe traktorë'],['build','🧱','Градежни материјали','Building materials','#efdcd2','Materiale ndërtimi']];
+function cm(k){return CATS.concat(OLDCATS).filter(function(c){return c[0]==k})[0]||CATS[0]}
 function ci(i){return (CITIES[i]||CITIES[0])[LI[L]]}
 function cn(c){return c[L=='mk'?2:L=='en'?3:5]}
 function fl(f){return f[1+LI[L]]}
@@ -426,9 +471,10 @@ function fmtPrice(d){var t=T[L];if(d.pt=='free')return t.ptFree;if(d.pt=='swap')
 function kn(d){return T[L]['k_'+d.kind]||''}
 function ytId(s){s=String(s||'').trim();if(!s)return '';var m=s.match(/^[A-Za-z0-9_-]{11}$/)||s.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([A-Za-z0-9_-]{11})/);return m?(m[1]||m[0]):''}
 function phNum(p){var d=String(p).replace(/[^0-9+]/g,'');if(d[0]=='+')return d.slice(1);d=d.replace(/^00/,'');if(d[0]=='0')return '389'+d.slice(1);return d}
+function dayAge(x){var d=new Date(x),n=new Date();if(isNaN(d))return 0;return Math.max(0,Math.round((new Date(n.getFullYear(),n.getMonth(),n.getDate())-new Date(d.getFullYear(),d.getMonth(),d.getDate()))/864e5))}
 function mapRow(r){
   var im=(r.images&&r.images.length)?r.images:(r.image_url?[r.image_url]:[]);
-  return{id:r.id,t:r.title,p:+r.price,c:r.category,city:r.city,dm:r.description,age:Math.max(0,Math.floor((Date.now()-new Date(r.renewed_at))/864e5)),top:r.is_top,hid:!!(r.hidden||r.report_count>=3),cond:r.cond,ph:r.phone,owner:r.owner,x:r.extra||{},img:im[0]||null,imgs:im,sub:r.sub||'',kind:(r.kind=='sale'||!r.kind)&&r.extra&&r.extra.deal=='rent'?'rent':(r.kind||'sale'),pt:r.price_type||'fixed',cur:r.currency||'EUR',wa:!!r.wa,vb:!!r.vb,video:r.video||'',views:r.views||0,created:r.created_at||r.renewed_at}
+  return{id:r.id,t:r.title,p:+r.price,c:r.category,city:r.city,dm:r.description,age:dayAge(r.renewed_at),top:r.is_top,hid:!!(r.hidden||r.report_count>=3),cond:r.cond,ph:r.phone,owner:r.owner,x:r.extra||{},img:im[0]||null,imgs:im,sub:r.sub||'',kind:(r.kind=='sale'||!r.kind)&&r.extra&&r.extra.deal=='rent'?'rent':(r.kind||'sale'),pt:r.price_type||'fixed',cur:r.currency||'EUR',wa:!!r.wa,vb:!!r.vb,video:r.video||'',views:r.views||0,created:r.created_at||r.renewed_at}
 }
 function listingUrl(d){return '/oglas/'+encodeURIComponent(d.id)}
 
@@ -640,7 +686,7 @@ function render(){
     info.appendChild(el('span','meta',(d.kind!='sale'?kn(d)+' · ':'')+ci(d.city)+' · '+ago(d.age)));
     a.appendChild(pic);a.appendChild(info);
     var w=el('div','cw');w.appendChild(a);
-    var h=el('button','heart',FAV.has(d.id)?'♥':'♡');h.setAttribute('aria-label','Favorite');h.setAttribute('aria-pressed',FAV.has(d.id));
+    var h=el('button','heart');h.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 20.3s-7.6-4.7-7.6-10.3a4.4 4.4 0 0 1 7.6-3 4.4 4.4 0 0 1 7.6 3c0 5.6-7.6 10.3-7.6 10.3z" fill="'+(FAV.has(d.id)?'currentColor':'none')+'" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';h.setAttribute('aria-label','Favorite');h.setAttribute('aria-pressed',FAV.has(d.id));
     h.onclick=function(){toggleFav(d.id)};w.appendChild(h);g.appendChild(w);
   });
 }
@@ -886,6 +932,43 @@ if(sb){
     },0);
   });
 }
+</script>
+<nav class="tabbar" id="tabbar" aria-label="Main"></nav>
+<script>
+(function(){
+  var TX={mk:{home:'Дома',search:'Барај',post:'Објави',saved:'Зачувани',acct:'Профил'},
+          sq:{home:'Kreu',search:'Kërko',post:'Posto',saved:'Të ruajtura',acct:'Llogaria'},
+          en:{home:'Home',search:'Search',post:'Post',saved:'Saved',acct:'Account'}};
+  var IC={
+    home:'<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg>',
+    search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+    post:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+    saved:'<svg viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/></svg>',
+    acct:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c.8-3.8 3.8-5.8 7.5-5.8s6.7 2 7.5 5.8"/></svg>'
+  };
+  var nav=document.getElementById('tabbar'),btns={};
+  function $(i){return document.getElementById(i)}
+  [['home'],['search'],['post'],['saved'],['acct']].forEach(function(a){
+    var k=a[0],b=document.createElement('button');b.type='button';b.dataset.k=k;
+    if(k=='post'){b.className='plus';b.innerHTML='<span class="circ">'+IC.post+'</span><span class="lb"></span>'}
+    else{b.innerHTML=IC[k]+'<span class="lb"></span>'}
+    if(k=='saved'){var bd=document.createElement('span');bd.className='bd';bd.hidden=true;b.appendChild(bd);btns.bd=bd}
+    nav.appendChild(b);btns[k]=b;
+  });
+  function lang(){var l=$('lang')&&$('lang').value;return TX[l]?l:'mk'}
+  function labels(){var t=TX[lang()];Object.keys(t).forEach(function(k){btns[k].querySelector('.lb').textContent=t[k]})}
+  function on(k){Object.keys(btns).forEach(function(x){if(x!='bd')btns[x].classList.toggle('on',x==k)})}
+  function clickIf(id){var e=$(id);if(e)e.click()}
+  btns.home.onclick=function(){on('home');var f=document.querySelector('#tabs .chip');if(f&&f.getAttribute('aria-pressed')!='true')f.click();window.scrollTo({top:0,behavior:'smooth'})};
+  btns.search.onclick=function(){on('search');window.scrollTo({top:0,behavior:'smooth'});setTimeout(function(){var q=$('q');if(q)q.focus()},250)};
+  btns.post.onclick=function(){clickIf('fab')};
+  btns.saved.onclick=function(){var h=$('hfav');if(!h||h.hidden){clickIf('login')}else{on('saved');h.click()}};
+  btns.acct.onclick=function(){var a=$('acct');if(a&&!a.hidden)a.click();else clickIf('login')};
+  function badge(){var n=parseInt(($('hfn')||{}).textContent,10)||0;btns.bd.textContent=n;btns.bd.hidden=!(n>0)}
+  var hn=$('hfn');if(hn)new MutationObserver(badge).observe(hn,{childList:true,characterData:true,subtree:true});
+  var ln=$('lang');if(ln)ln.addEventListener('change',function(){setTimeout(labels,0)});
+  labels();badge();on('home');
+})();
 </script>
 </body>
 </html>
