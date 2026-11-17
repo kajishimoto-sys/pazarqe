@@ -79,6 +79,29 @@ const YT = /^[A-Za-z0-9_-]{11}$/;
 const waNum = (p) => { let d = String(p).replace(/[^0-9+]/g, ''); if (d[0] === '+') return d.slice(1); d = d.replace(/^00/, ''); return d[0] === '0' ? '389' + d.slice(1) : d; };
 const thumbOf = (u) => u.replace(/\.jpg$/, '_t.jpg');
 
+const TZ = 'Europe/Skopje';
+const MONTHS = {
+  mk: ['јануари','февруари','март','април','мај','јуни','јули','август','септември','октомври','ноември','декември'],
+  sq: ['janar','shkurt','mars','prill','maj','qershor','korrik','gusht','shtator','tetor','nëntor','dhjetor'],
+  en: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+};
+function ymd(x) {
+  const d = new Date(x);
+  if (isNaN(d)) return null;
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(d).map((q) => [q.type, q.value]));
+  return { y: +p.year, m: +p.month, d: +p.day };
+}
+function dayAge(x) {
+  const a = ymd(Date.now()), b = ymd(x);
+  if (!a || !b) return 0;
+  return Math.max(0, Math.round((Date.UTC(a.y, a.m - 1, a.d) - Date.UTC(b.y, b.m - 1, b.d)) / 864e5));
+}
+function fmtDate(x, lang) {
+  const b = ymd(x);
+  if (!b) return '';
+  return b.d + ' ' + (MONTHS[lang] || MONTHS.en)[b.m - 1] + ' ' + b.y;
+}
+
 function ago(days, lang, tx) {
   if (days < 1) return tx.today;
   if (lang === 'mk') return 'пред ' + days + (days === 1 ? ' ден' : ' дена');
@@ -233,13 +256,13 @@ async function onRequest({ request: req }) {
   const cityName = (CITIES[l.city] || CITIES[0])[LI[lang]];
   const price = money(l, lang, tx);
   const images = (Array.isArray(l.images) && l.images.length ? l.images : l.image_url ? [l.image_url] : []).filter((u) => IMG_OK.test(u)).slice(0, 12);
-  const days = Math.max(0, Math.floor((Date.now() - new Date(l.renewed_at || l.created_at)) / 864e5));
+  const days = dayAge(l.renewed_at || l.created_at);
   const specs = specsOf(l, lang);
   const kind = kindOf(l);
   const kindName = tx['k_' + kind] || '';
   const subDef = (SUBS[l.category] || []).find((x) => x[0] === l.sub);
   const subName = subDef ? subDef[1 + LI[lang]] : '';
-  const postedOn = new Date(l.created_at || l.renewed_at).toLocaleDateString(LOCALE[lang], { day: 'numeric', month: 'long', year: 'numeric' });
+  const postedOn = fmtDate(l.created_at || l.renewed_at, lang);
   const views = Number(l.views) || 0;
   const vid = YT.test(l.video || '') ? l.video : '';
   const self = (lg) => origin + '/oglas/' + id + (lg === 'mk' ? '' : '?lang=' + lg);
@@ -271,7 +294,7 @@ ${images.length > 1 ? `<div class="thumbs" id="th">${images.map((u, i) => `<butt
 <h1>${esc(l.title)}</h1>
 <p class="big">${esc(price)}</p>
 <p class="meta">${esc(catName)}${subName ? ' · ' + esc(subName) : ''} · ${esc(cityName)} · ${esc(ago(days, lang, tx))}</p>
-<p class="meta">${esc(tx.posted)} ${esc(postedOn)} · 👁 <span id="vw">${views}</span> ${esc(tx.views)}</p>
+<p class="meta">${esc(tx.posted)} ${esc(postedOn)} · 👁 <span id="vw">${views}</span> ${esc(views === 1 ? ({ mk: 'преглед', sq: 'shikim', en: 'view' }[lang] || tx.views) : tx.views)}</p>
 <div class="specs"><span class="spec"><b>${esc(kindName)}</b></span>${['new', 'used'].includes(l.cond) && l.category !== 'job' && l.category !== 'serv' ? `<span class="spec"><b>${esc(tx.cond)}</b> ${esc(condLabel)}</span>` : ''}${specs.map(([k, v]) => `<span class="spec"><b>${esc(k)}</b> ${esc(v)}</span>`).join('')}</div>
 ${false ? `<div class="specs">${specs.map(([k, v]) => `<span class="spec"><b>${esc(k)}</b> ${esc(v)}</span>`).join('')}</div>` : ''}
 ${l.description ? `<h2>${esc(tx.desc)}</h2><p class="desc">${esc(l.description)}</p>` : ''}
