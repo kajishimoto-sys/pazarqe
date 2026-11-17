@@ -181,6 +181,41 @@ footer::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;bac
 footer a{color:var(--pine-ink);opacity:.85}
 .bar{background:var(--surface)}
 @media (max-width:640px){header a{font-size:17px}h1{font-size:21px}}
+
+/* ───── listing page v2: photo-first, two columns on desktop ───── */
+main.wrap{max-width:760px}
+.lay{display:block}
+.colm{padding:12px}
+.gal{background:#0f1514;border-radius:14px;margin-bottom:10px}
+.gs img{aspect-ratio:4/3;object-fit:contain;background:#0f1514}
+.thumbs{gap:8px;margin:0 0 14px}.thumbs button{width:72px;height:54px;border-radius:8px}
+.colm h1{font-family:var(--fd);font-size:21px;font-weight:700;line-height:1.25;margin:4px 0 6px}
+.big{font-family:var(--fd);color:var(--price);font-size:26px;font-weight:800}
+.sprice{display:none}
+.spec{background:var(--accent);border-color:transparent;border-radius:999px;padding:5px 12px}
+.colm h2{font-family:var(--fd);font-size:15px;margin:18px 0 8px;padding-top:14px;border-top:1px solid var(--line)}
+.sidec{margin-top:12px}
+.crumbs{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center}
+@media (min-width:900px){
+  main.wrap{max-width:1160px;padding:22px 24px 40px}
+  .lay{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:22px;align-items:start}
+  .colm{padding:16px}
+  .gs img{aspect-ratio:auto;height:min(560px,62vh)}
+  .gal{margin-bottom:12px}
+  .colm h1{font-size:28px;margin-top:8px}
+  .big.mob{display:none}
+  .sprice{display:block;font-family:var(--fd);color:var(--price);font-size:30px;font-weight:800;line-height:1.2;margin:0 0 16px}
+  .cols{position:sticky;top:18px}
+  .sidec{margin-top:0;padding:20px}
+  .bar{position:static;display:grid;gap:10px;padding:0;background:none;border:0;margin:0 0 14px}
+  .bar .btn{width:100%;min-height:54px}
+  .btn.main{font-size:18px}
+  .chat{margin:0 0 14px}.chat .btn{flex:1}
+  .links{flex-direction:column;gap:8px;margin-top:6px;padding-top:14px;border-top:1px solid var(--line)}
+  .sim{grid-template-columns:repeat(4,minmax(0,1fr))}
+  footer{max-width:1160px;padding:0 24px 40px}
+  .toast{bottom:30px}
+}
 `;
 
 const FOOT = {
@@ -286,28 +321,34 @@ async function onRequest({ request: req }) {
 
   const notice = url.searchParams.get('posted') ? tx.okPosted : url.searchParams.get('saved') ? tx.okSaved : '';
   const pageData = JSON.stringify({ url: SB, key: KEY, edit: tx.edit, renew: tx.renew, del: tx.del, confirmDel: tx.confirmDel, report: tx.report, save: tx.save, saved: tx.saved, renewed: tx.renewed, fail: tx.fail });
-  const body = `<main>
+  const body = `<main class="wrap">
 ${notice ? `<p class="notice" role="status">✔ ${esc(notice)}</p>` : ''}<p class="crumbs"><a href="${esc(home)}">${esc(tx.brand)}</a> › <a href="${esc(catUrl)}">${esc(catName)}</a>${subName ? ` › <a href="${esc(catUrl + '&sub=' + l.sub)}">${esc(subName)}</a>` : ''}</p>
-<article class="card" id="art" data-id="${esc(id)}" data-owner="${esc(l.owner)}" data-lang="${esc(lang)}" data-imgs="${esc(JSON.stringify(images))}" data-x="${esc(pageData)}">
+<article class="lay" id="art" data-id="${esc(id)}" data-owner="${esc(l.owner)}" data-lang="${esc(lang)}" data-imgs="${esc(JSON.stringify(images))}" data-x="${esc(pageData)}">
+<div class="colm card">
 ${gallery}
 ${images.length > 1 ? `<div class="thumbs" id="th">${images.map((u, i) => `<button type="button" data-i="${i}" aria-label="${i + 1}"${i === 0 ? ' aria-current="true"' : ''}><img src="${esc(thumbOf(u))}" data-f="${esc(u)}" onerror="this.onerror=null;this.src=this.dataset.f" alt="" loading="lazy"></button>`).join('')}</div>` : ''}
 <h1>${esc(l.title)}</h1>
-<p class="big">${esc(price)}</p>
+<p class="big mob">${esc(price)}</p>
 <p class="meta">${esc(catName)}${subName ? ' · ' + esc(subName) : ''} · ${esc(cityName)} · ${esc(ago(days, lang, tx))}</p>
 <p class="meta">${esc(tx.posted)} ${esc(postedOn)} · 👁 <span id="vw">${views}</span> ${esc(views === 1 ? ({ mk: 'преглед', sq: 'shikim', en: 'view' }[lang] || tx.views) : tx.views)}</p>
 <div class="specs"><span class="spec"><b>${esc(kindName)}</b></span>${['new', 'used'].includes(l.cond) && l.category !== 'job' && l.category !== 'serv' ? `<span class="spec"><b>${esc(tx.cond)}</b> ${esc(condLabel)}</span>` : ''}${specs.map(([k, v]) => `<span class="spec"><b>${esc(k)}</b> ${esc(v)}</span>`).join('')}</div>
 ${false ? `<div class="specs">${specs.map(([k, v]) => `<span class="spec"><b>${esc(k)}</b> ${esc(v)}</span>`).join('')}</div>` : ''}
 ${l.description ? `<h2>${esc(tx.desc)}</h2><p class="desc">${esc(l.description)}</p>` : ''}
 ${vid ? `<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/${esc(vid)}" title="${esc(tx.videoT)}" loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>` : ''}
-${l.wa || l.vb ? `<div class="chat" id="chat" data-p="${esc(phoneB64)}">${l.wa ? '<button class="btn wa" type="button" data-k="wa">WhatsApp</button>' : ''}${l.vb ? '<button class="btn vb" type="button" data-k="vb">Viber</button>' : ''}</div>` : ''}
-<div class="links"><a href="${esc(origin + '/?seller=' + l.owner + (lang === 'mk' ? '' : '&lang=' + lang))}">${esc(tx.sellerMore)} →</a><a href="${esc(catUrl)}">${esc(tx.more)} ${esc(catName)} →</a><a href="${esc(home)}">${esc(tx.all)}</a></div>
-<div class="tools" id="tools"></div>
-</article>
-${simHtml}</main>
+</div>
+<aside class="cols"><div class="card sidec">
+<p class="sprice">${esc(price)}</p>
 <div class="bar">
 <button class="btn main" id="ph" type="button" data-p="${esc(phoneB64)}" data-c="${esc(tx.call)}">📞 ${esc(tx.show)}</button>
 <button class="btn ghost" id="sh" type="button" data-u="${esc(canonical)}" data-t="${esc(l.title)}" data-m="${esc(tx.copied)}">${esc(tx.share)}</button>
 </div>
+${l.wa || l.vb ? `<div class="chat" id="chat" data-p="${esc(phoneB64)}">${l.wa ? '<button class="btn wa" type="button" data-k="wa">WhatsApp</button>' : ''}${l.vb ? '<button class="btn vb" type="button" data-k="vb">Viber</button>' : ''}</div>` : ''}
+<div class="links"><a href="${esc(origin + '/?seller=' + l.owner + (lang === 'mk' ? '' : '&lang=' + lang))}">${esc(tx.sellerMore)} →</a><a href="${esc(catUrl)}">${esc(tx.more)} ${esc(catName)} →</a><a href="${esc(home)}">${esc(tx.all)}</a></div>
+<div class="tools" id="tools"></div>
+</div></aside>
+</article>
+${simHtml}</main>
+
 <footer>${esc(tx.brand)} – ${esc(tx.tag)}<br>${footLinks(lang)}</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script>
