@@ -213,9 +213,13 @@ main.wrap{max-width:760px}
   .chat{margin:0 0 14px}.chat .btn{flex:1}
   .links{flex-direction:column;gap:8px;margin-top:6px;padding-top:14px;border-top:1px solid var(--line)}
   .sim{grid-template-columns:repeat(4,minmax(0,1fr))}
-  footer{max-width:1160px;padding:0 24px 40px}
+  footer{max-width:none;margin:36px 0 0;padding:36px max(24px,calc((100% - 1160px)/2 + 24px)) 40px}
   .toast{bottom:30px}
 }
+
+.seller{display:flex;gap:12px;align-items:center;text-decoration:none;padding:12px;margin:0 0 14px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
+.seller .av{flex:none;width:50px;height:50px;border-radius:50%;display:grid;place-items:center;color:#fff;font:700 22px/1 var(--fd)}
+.seller .si{display:grid;gap:1px;min-width:0}.seller .si b{font-size:16px;overflow-wrap:anywhere}.seller .si small{color:var(--mute);font-size:13px}
 `;
 
 const FOOT = {
@@ -286,6 +290,14 @@ async function onRequest({ request: req }) {
     if (r2.ok) sims = (await r2.json()).filter((x) => x && UUID.test(x.id));
   } catch (e) { /* similar ads are optional */ }
 
+  let seller = null;
+  try {
+    if (UUID.test(String(l.owner))) {
+      const r3 = await fetch(`${SB}/rest/v1/rpc/seller_info`, { method: 'POST', headers: { apikey: KEY, 'content-type': 'application/json' }, body: JSON.stringify({ p_uid: l.owner }) });
+      if (r3.ok) { const a3 = await r3.json(); seller = Array.isArray(a3) ? a3[0] : a3; }
+    }
+  } catch (e) { /* seller card is optional */ }
+
   const cat = CATS.find((c) => c[0] === l.category) || CATS[0];
   const catName = cat[2 + (lang === 'mk' ? 0 : lang === 'en' ? 1 : 2)];
   const cityName = (CITIES[l.city] || CITIES[0])[LI[lang]];
@@ -319,6 +331,16 @@ async function onRequest({ request: req }) {
     ? `<div class="gal"><div class="gs" id="gs">${images.map((u, i) => `<img src="${esc(u)}" alt="${esc(l.title)}"${i ? ' loading="lazy"' : ' fetchpriority="high"'} width="800" height="600">`).join('')}</div>${images.length > 1 ? `<button class="gb l" id="gl" type="button" aria-label="Previous">‹</button><button class="gb r" id="gr" type="button" aria-label="Next">›</button><span class="gc" id="gc">1 / ${images.length}</span>` : ''}</div>`
     : `<div class="noimg" style="background:${COLOR[l.category] || '#e6e6e6'}">${cat[1]}</div>`;
 
+  const sName = (seller && seller.name) || ({ mk: 'Продавач', sq: 'Shitësi', en: 'Seller' }[lang]);
+  const sInit = (Array.from(String(sName))[0] || '?').toUpperCase();
+  const sHue = Array.from(String(l.owner)).reduce((a, c) => (a * 31 + c.charCodeAt(0)) % 360, 7);
+  const sMember = seller && seller.member_since ? ymd(seller.member_since) : null;
+  const sMy = sMember ? MONTHS[lang][sMember.m - 1] + ' ' + sMember.y : '';
+  const sSince = !sMy ? '' : lang === 'mk' ? 'на ' + tx.brand + ' од ' + sMy : lang === 'sq' ? 'në ' + tx.brand + ' që nga ' + sMy : 'on ' + tx.brand + ' since ' + sMy;
+  const sN = seller && Number.isFinite(Number(seller.listing_count)) ? Number(seller.listing_count) : null;
+  const sCount = sN === null ? '' : lang === 'mk' ? (sN === 1 ? '1 оглас' : sN + ' огласи') : lang === 'sq' ? (sN === 1 ? '1 njoftim' : sN + ' njoftime') : (sN === 1 ? '1 listing' : sN + ' listings');
+  const sellerHtml = `<a class="seller" href="${esc(origin + '/?seller=' + l.owner + (lang === 'mk' ? '' : '&lang=' + lang))}"><span class="av" style="background:hsl(${sHue} 45% 36%)">${esc(sInit)}</span><span class="si"><b>${esc(sName)}</b>${sSince ? `<small>${esc(sSince)}</small>` : ''}${sCount ? `<small>${esc(sCount)}</small>` : ''}</span></a>`;
+
   const notice = url.searchParams.get('posted') ? tx.okPosted : url.searchParams.get('saved') ? tx.okSaved : '';
   const pageData = JSON.stringify({ url: SB, key: KEY, edit: tx.edit, renew: tx.renew, del: tx.del, confirmDel: tx.confirmDel, report: tx.report, save: tx.save, saved: tx.saved, renewed: tx.renewed, fail: tx.fail });
   const body = `<main class="wrap">
@@ -338,6 +360,7 @@ ${vid ? `<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/${
 </div>
 <aside class="cols"><div class="card sidec">
 <p class="sprice">${esc(price)}</p>
+${sellerHtml}
 <div class="bar">
 <button class="btn main" id="ph" type="button" data-p="${esc(phoneB64)}" data-c="${esc(tx.call)}">📞 ${esc(tx.show)}</button>
 <button class="btn ghost" id="sh" type="button" data-u="${esc(canonical)}" data-t="${esc(l.title)}" data-m="${esc(tx.copied)}">${esc(tx.share)}</button>
