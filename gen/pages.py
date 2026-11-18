@@ -2,10 +2,11 @@
 # Edit CONTACT_EMAIL, then run:  python3 gen/pages.py   (writes into site/public/)
 import html, datetime
 CONTACT_EMAIL = 'YOUR-EMAIL@example.com'
-OUT = '/home/claude/site/public/'
+import os
+OUT = os.path.dirname(os.path.abspath(__file__)) + '/'
 UPD = {'mk': 'Последно ажурирање', 'sq': 'Përditësuar së fundi', 'en': 'Last updated'}
 TODAY = datetime.date.today().isoformat()
-BRAND = {'mk': 'Пазарче', 'sq': 'Pazarçe', 'en': 'Пазарче'}
+BRAND = {'mk': 'mazalmk', 'sq': 'mazalmk', 'en': 'mazalmk'}
 NAV = {
  'help': {'mk': 'Помош', 'sq': 'Ndihma', 'en': 'Help'},
  'safety': {'mk': 'Безбедно тргување', 'sq': 'Tregtim i sigurt', 'en': 'Trade safely'},
@@ -54,7 +55,7 @@ P['safety'] = {
   'Средете се на јавно и осветлено место, по можност со некого.',
   'Прегледајте го предметот пред да платите. За возила проверете ги документите и историјата.',
   'Не плаќајте однапред или аванс на непознати, ниту „резервација“ или „достава“ однапред.',
-  'Никогаш не споделувајте лозинки, SMS кодови или податоци од картичка. Пазарче не бара такви податоци.',
+  'Никогаш не споделувајте лозинки, SMS кодови или податоци од картичка. mazalmk не бара такви податоци.',
   'Внимавајте на цени што се премногу ниски: тоа често е измама.',
   'За работа: сериозен работодавец не бара пари за да ве вработи.',
   'Користете ги вашите вистински податоци само онаму каде што е потребно и не праќајте копија од лична карта.',
@@ -66,7 +67,7 @@ P['safety'] = {
   'Takohuni në vend publik dhe të ndriçuar, nëse mundet me dikë tjetër.',
   'Shikojeni sendin para se të paguani. Për automjete kontrolloni dokumentet dhe historikun.',
   'Mos paguani paraprakisht ose avans te të panjohurit, as „rezervim“ apo „dërgesë“ paraprakisht.',
-  'Asnjëherë mos ndani fjalëkalime, kode SMS ose të dhëna kartele. Pazarçe nuk kërkon të dhëna të tilla.',
+  'Asnjëherë mos ndani fjalëkalime, kode SMS ose të dhëna kartele. mazalmk nuk kërkon të dhëna të tilla.',
   'Kujdes me çmimet shumë të ulëta: shpesh janë mashtrim.',
   'Për punë: një punëdhënës serioz nuk kërkon para që t’ju punësojë.',
   'Mos dërgoni kopje të letërnjoftimit.',
@@ -90,7 +91,7 @@ P['privacy'] = {
  ('Кои податоци ги собираме', [('ul', ['Е-пошта и лозинка за сметката (лозинката се чува заштитена, не ја гледаме).', 'Име и, по избор, телефон во профилот.', 'Огласите што ги објавувате: наслов, опис, цена, град, фотографии и телефонски број.', 'Огласите што ги зачувувате како омилени и пријавите што ги испраќате.'])]),
  ('Што е јавно', ['Огласот и неговиот телефонски број се јавно видливи, за да можат купувачите да ве контактираат. Не ставајте во огласот податоци што не сакате да бидат јавни.']),
  ('Колачиња и следење', ['Користиме само неопходно складирање во вашиот прелистувач (најава, јазик и приказ). Не користиме рекламни колачиња и не ве следиме за реклами.']),
- ('Каде се чуваат податоците', ['Податоците и фотографиите се чуваат кај Supabase, а веб-страницата се хостира кај Netlify. Овие компании ги обработуваат податоците за наша сметка.']),
+ ('Каде се чуваат податоците', ['Податоците и фотографиите се чуваат кај Supabase, а веб-страницата се хостира кај Cloudflare. Овие компании ги обработуваат податоците за наша сметка.']),
  ('Споделување', ['Не ги продаваме вашите податоци. Ги споделуваме само кога е законски задолжително.']),
  ('Вашите права', ['Можете да ги прегледате, менувате и бришете вашите огласи и профил. Можете да ја избришете сметката во „Мојата сметка“, со што се бришат и огласите и фотографиите. За други барања пишете ни на ' + CONTACT_EMAIL + '.']),
  ('Промени', ['Ако ја променуваме оваа политика, ќе го ажурираме датумот на врвот на страницата.']),
@@ -99,7 +100,7 @@ P['privacy'] = {
  ('Cilat të dhëna i mbledhim', [('ul', ['Emailin dhe fjalëkalimin e llogarisë (fjalëkalimi ruhet i mbrojtur, ne nuk e shohim).', 'Emrin dhe, opsionalisht, telefonin në profil.', 'Njoftimet që postoni: titulli, përshkrimi, çmimi, qyteti, fotot dhe numri i telefonit.', 'Njoftimet që ruani si të preferuara dhe raportimet që dërgoni.'])]),
  ('Çfarë është publike', ['Njoftimi dhe numri i tij i telefonit janë publikë, që blerësit të mund t’ju kontaktojnë. Mos vendosni në njoftim të dhëna që nuk doni t’i shohin të gjithë.']),
  ('Cookie dhe gjurmim', ['Përdorim vetëm ruajtje të domosdoshme në shfletuesin tuaj (hyrja, gjuha dhe pamja). Nuk përdorim cookie reklamash dhe nuk ju gjurmojmë për reklama.']),
- ('Ku ruhen të dhënat', ['Të dhënat dhe fotot ruhen te Supabase, ndërsa faqja strehohet te Netlify. Këto kompani i përpunojnë të dhënat në emër tonin.']),
+ ('Ku ruhen të dhënat', ['Të dhënat dhe fotot ruhen te Supabase, ndërsa faqja strehohet te Cloudflare. Këto kompani i përpunojnë të dhënat në emër tonin.']),
  ('Ndarja', ['Nuk i shesim të dhënat tuaja. I ndajmë vetëm kur kërkohet me ligj.']),
  ('Të drejtat tuaja', ['Mund t’i shihni, ndryshoni dhe fshini njoftimet dhe profilin tuaj. Mund ta fshini llogarinë te „Llogaria ime“, që fshin edhe njoftimet dhe fotot. Për kërkesa të tjera na shkruani te ' + CONTACT_EMAIL + '.']),
  ('Ndryshime', ['Nëse e ndryshojmë këtë politikë, do ta përditësojmë datën në krye të faqes.']),
@@ -108,15 +109,15 @@ P['privacy'] = {
  ('What data we collect', [('ul', ['Email and password for your account (the password is stored protected; we cannot see it).', 'Your name and, optionally, a phone number in your profile.', 'The listings you post: title, description, price, city, photos and phone number.', 'Listings you save as favorites and reports you send.'])]),
  ('What is public', ['Your listing and its phone number are public so buyers can contact you. Do not put anything in a listing that you do not want everyone to see.']),
  ('Cookies and tracking', ['We only use storage in your browser that the site needs to work (login, language and view). We do not use advertising cookies and do not track you for ads.']),
- ('Where data is stored', ['Data and photos are stored with Supabase and the website is hosted by Netlify. These companies process data on our behalf.']),
+ ('Where data is stored', ['Data and photos are stored with Supabase and the website is hosted by Cloudflare. These companies process data on our behalf.']),
  ('Sharing', ['We do not sell your data. We share it only when required by law.']),
  ('Your rights', ['You can view, change and delete your listings and profile. You can delete your account under “My account”, which also deletes your listings and photos. For other requests write to ' + CONTACT_EMAIL + '.']),
  ('Changes', ['If we change this policy, we will update the date at the top of the page.']),
 ]}
 P['terms'] = {
 'mk': [
- ('Прифаќање', ['Со користење на Пазарче ги прифаќате овие услови.']),
- ('Услугата', ['Пазарче е платформа за огласи. Ние не сме страна во продажбата и не продаваме, не проверуваме и не гарантираме предмети, цени или продавачи. Договорот го правите директно со другата страна.']),
+ ('Прифаќање', ['Со користење на mazalmk ги прифаќате овие услови.']),
+ ('Услугата', ['mazalmk е платформа за огласи. Ние не сме страна во продажбата и не продаваме, не проверуваме и не гарантираме предмети, цени или продавачи. Договорот го правите директно со другата страна.']),
  ('Вашиот оглас', [('ul', ['Одговорни сте за точноста на огласот и имате право да ги користите фотографиите.', 'Огласот мора да е во вистинска категорија и да не е дупликат.', 'Забрането е: илегални предмети, оружје, дрога, украдена стока, измами, лажни огласи, навредлива или дискриминаторска содржина.', 'Ограничување: најмногу 10 огласи на ден по сметка.'])]),
  ('Отстранување и блокирање', ['Можеме да скриеме или избришеме огласи и да блокираме сметки што ги кршат условите или се пријавени за злоупотреба, без претходна најава.']),
  ('Одговорност', ['Услугата се дава „како што е“. Колку што законот дозволува, не одговараме за штета од трансакции помеѓу корисници или од прекин на услугата.']),
@@ -124,8 +125,8 @@ P['terms'] = {
  ('Контакт', ['Прашања: ' + CONTACT_EMAIL + '.']),
 ],
 'sq': [
- ('Pranimi', ['Duke përdorur Pazarçe, i pranoni këto kushte.']),
- ('Shërbimi', ['Pazarçe është platformë njoftimesh. Ne nuk jemi palë në shitje dhe nuk shesim, nuk kontrollojmë e nuk garantojmë sende, çmime apo shitës. Marrëveshjen e bëni drejtpërdrejt me palën tjetër.']),
+ ('Pranimi', ['Duke përdorur mazalmk, i pranoni këto kushte.']),
+ ('Shërbimi', ['mazalmk është platformë njoftimesh. Ne nuk jemi palë në shitje dhe nuk shesim, nuk kontrollojmë e nuk garantojmë sende, çmime apo shitës. Marrëveshjen e bëni drejtpërdrejt me palën tjetër.']),
  ('Njoftimi juaj', [('ul', ['Jeni përgjegjës për saktësinë e njoftimit dhe keni të drejtë t’i përdorni fotot.', 'Njoftimi duhet të jetë në kategorinë e duhur dhe jo i dyfishtë.', 'E ndaluar: sende të paligjshme, armë, drogë, mallra të vjedhura, mashtrime, njoftime të rreme, përmbajtje fyese ose diskriminuese.', 'Kufizim: maksimumi 10 njoftime në ditë për llogari.'])]),
  ('Heqja dhe bllokimi', ['Mund të fshehim ose fshijmë njoftime dhe të bllokojmë llogari që i shkelin kushtet ose raportohen për abuzim, pa njoftim paraprak.']),
  ('Përgjegjësia', ['Shërbimi ofrohet „siç është“. Sa lejon ligji, nuk jemi përgjegjës për dëme nga transaksionet mes përdoruesve ose nga ndërprerja e shërbimit.']),
@@ -133,8 +134,8 @@ P['terms'] = {
  ('Kontakt', ['Pyetje: ' + CONTACT_EMAIL + '.']),
 ],
 'en': [
- ('Acceptance', ['By using Пазарче you accept these terms.']),
- ('The service', ['Пазарче is a classifieds platform. We are not a party to any sale and we do not sell, check or guarantee items, prices or sellers. You make the deal directly with the other person.']),
+ ('Acceptance', ['By using mazalmk you accept these terms.']),
+ ('The service', ['mazalmk is a classifieds platform. We are not a party to any sale and we do not sell, check or guarantee items, prices or sellers. You make the deal directly with the other person.']),
  ('Your listing', [('ul', ['You are responsible for the accuracy of your listing and must have the right to use its photos.', 'A listing must be in the right category and not a duplicate.', 'Not allowed: illegal items, weapons, drugs, stolen goods, fraud, fake listings, abusive or discriminatory content.', 'Limit: at most 10 listings per day per account.'])]),
  ('Removal and bans', ['We may hide or delete listings and ban accounts that break these terms or are reported for abuse, without prior notice.']),
  ('Liability', ['The service is provided “as is”. As far as the law allows, we are not liable for losses from transactions between users or from service interruptions.']),
@@ -201,9 +202,9 @@ def render(name):
     foot = ''.join(''.join('<a data-l="%s" data-p="/%s.html" href="/%s.html">%s</a>' % (l, k, k, e(NAV[k][l])) for l in ('mk','sq','en')) for k in NAV)
     return ('<!DOCTYPE html><html lang="mk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
       '<title>%s</title><meta name="theme-color" content="#fdf8ee"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@500;700;800&display=swap"><link rel="icon" href="/icon.svg" type="image/svg+xml"><style>%s</style></head>'
-      '<body data-l="mk"><header><div class="in"><a href="/" data-p="/"><span class="lgb"><i></i><u>П</u></span><span>%s</span></a><div class="lg"><button data-k="mk">МК</button><button data-k="sq">SQ</button><button data-k="en">EN</button></div></div></header>'
+      '<body data-l="mk"><header><div class="in"><a href="/" data-p="/"><span class="lgb"><i></i><u>m</u></span><span>%s</span></a><div class="lg"><button data-k="mk">МК</button><button data-k="sq">SQ</button><button data-k="en">EN</button></div></div></header>'
       '<main>%s<article>%s</article></main><nav class="f">%s</nav><script>%s</script></body></html>') % (
-      e(titles['mk']), CSS, 'Пазарче', back, ''.join(arts), foot, JS % json.dumps(titles, ensure_ascii=False))
+      e(titles['mk']), CSS, 'mazalmk', back, ''.join(arts), foot, JS % json.dumps(titles, ensure_ascii=False))
 
 for n in P:
     open(OUT + n + '.html', 'w', encoding='utf-8').write(render(n))
