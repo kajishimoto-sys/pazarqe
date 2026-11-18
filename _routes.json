@@ -1,5 +1,5 @@
 {
   "version": 1,
-  "include": ["/oglas/*", "/sitemap.xml", "/robots.txt", "/post", "/login", "/register", "/account"],
+  "include": ["/oglas/*", "/sitemap.xml", "/robots.txt", "/post", "/login", "/register", "/account", "/search"],
   "exclude": []
 }
