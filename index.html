@@ -293,6 +293,35 @@ dialog.pg .pgbar{display:flex;align-items:center;gap:12px;position:sticky;top:0;
 .pglogo{font-family:var(--fd);font-weight:700;font-size:18px;color:var(--hd);text-decoration:none}
 dialog.pg .dlg{max-width:680px;margin:0 auto;padding:18px 16px calc(40px + env(safe-area-inset-bottom,0px));background:var(--bg)}
 @media (min-width:641px){dialog.pg .dlg{margin:22px auto 40px;padding:24px 26px;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--sh)}}
+
+/* ---- v3: search page, featured row, small fixes ---- */
+header::after{background-color:var(--bg)}
+dialog.pg .sp{gap:12px}
+.sfld{display:block}.sfld[hidden]{display:none}
+.sfld select,.sfld input,.sp .two input{width:100%;min-height:52px;padding:0 14px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);font:inherit;font-size:16px}
+.sfld select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a9690' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:18px;padding-right:42px}
+.sp .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sp .sw{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 2px;font-size:17px}
+.sp .sw input{appearance:none;-webkit-appearance:none;width:52px;height:30px;min-height:0;padding:0;border-radius:999px;border:0;background:var(--line);position:relative;flex:none;transition:background .15s}
+.sp .sw input::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .15s}
+.sp .sw input:checked{background:var(--tag)}.sp .sw input:checked::after{transform:translateX(22px)}
+.sp .go{min-height:56px;font-size:18px;width:100%;justify-content:center;border-radius:14px}
+.sp .clr{background:none;border:0;color:var(--tag);font-weight:700;font-size:15px;padding:8px;cursor:pointer;text-decoration:underline}
+.feat{margin:6px 0 4px}.feat .fh{font-family:var(--fd);font-size:clamp(18px,2.6vw,24px);margin:0 0 10px}
+.frow{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 0 10px;margin:0 -2px}
+.fcard{position:relative;flex:none;width:min(62vw,250px);aspect-ratio:3/4;border-radius:18px;overflow:hidden;background:var(--tile);scroll-snap-align:start;color:#fff;text-decoration:none;box-shadow:var(--sh)}
+.fcard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fcard .fov{position:absolute;left:0;right:0;bottom:0;padding:44px 14px 14px;background:linear-gradient(to top,rgba(0,0,0,.78),rgba(0,0,0,0));display:grid;gap:8px;justify-items:start}
+.fcard .fov b{font-size:16px;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fcard .fpr{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:4px 12px;border-radius:999px;font-weight:700;font-size:14px}
+#totop{position:fixed;right:14px;bottom:24px;z-index:6;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;box-shadow:var(--sh);cursor:pointer;padding:0}
+#totop[hidden]{display:none}
+@media (max-width:640px){
+  #totop{bottom:calc(86px + env(safe-area-inset-bottom,0px))}
+  #cats.tiles{padding-right:44px;-webkit-mask-image:linear-gradient(to right,#000 86%,transparent);mask-image:linear-gradient(to right,#000 86%,transparent)}
+  .grid[data-n="1"]:not(.list){grid-template-columns:1fr}
+  .grid[data-n="1"]:not(.list) .pic{aspect-ratio:16/10}
+}
 </style>
 </head>
 <body>
@@ -322,6 +351,7 @@ dialog.pg .dlg{max-width:680px;margin:0 auto;padding:18px 16px calc(40px + env(s
   </div>
   <div class="sbar" id="sbar" hidden><span id="sbt"></span><button type="button" class="fclr" id="sbx"></button></div>
   <section class="rv" id="rv" hidden></section>
+  <div class="feat" id="feat" hidden></div>
   <div class="sh"><h2 data-t="latestT"></h2></div>
   <div class="grid" id="grid"></div>
   <section class="cta"><div><h2 data-t="ctaT"></h2><p data-t="ctaP"></p></div><button type="button" class="btn" id="cbtn"></button></section>
@@ -419,7 +449,7 @@ try{if(SUPABASE_URL.indexOf('YOUR-')<0&&window.supabase)sb=window.supabase.creat
 var T={
 mk:{brand:'Пазарче',catT:'Категории',latestT:'Најнови огласи',hs1:'Бесплатно објавување',hs2:'града',hs3:'Македонски, албански и англиски',ctaT:'Имате нешто за продавање?',ctaP:'Поставете оглас бесплатно за помалку од една минута.',ssSave:'🔔 Зачувај пребарување',ssName:'Име на пребарувањето',ssT:'Зачувани пребарувања',ssNone:'Немате зачувани пребарувања.',ssDone:'Пребарувањето е зачувано',ssLimit:'Најмногу 7 зачувани пребарувања',rvT:'Неодамна прегледано',rvClear:'Исчисти',sellerOnly:'Огласи од еден продавач',sellerAll:'Прикажи ги сите',k_sale:'Се продава',k_rent:'Се изнајмува',k_wanted:'Се купува',k_wantrent:'Се бара за изнајмување',k_hiring:'Вработуваме',k_jobwanted:'Бара работа',kindL:'Вид на оглас',anyKind:'Сите типови',subL:'Подкатегорија',priceL:'Цена',ptL:'Вид на цена',ptFixed:'Фиксна',ptNeg:'Договорно',ptNegS:'договорно',ptFree:'Бесплатно',ptSwap:'Замена',curL:'Валута',videoL:'YouTube линк (по желба)',badVideo:'Невалиден YouTube линк',needPrice:'Внесете цена',cover:'Насловна',makeCover:'Постави како насловна',contactL:'Контакт и преку:',curS:'ден',heroT:'Купувај и продавај низ цела Македонија',heroP:'Бесплатни огласи за возила, недвижности, електроника, работа и повеќе.',postFree:'Објави оглас бесплатно',minP:'Мин. цена €',clearF:'Исчисти филтри',newB:'НОВО',vList:'Листа',vGrid:'Мрежа',acct:'Мојата сметка',accT:'Мојата сметка',profile:'Профил',defPhone:'Телефон за огласи (по избор)',saveProf:'Зачувај профил',profSaved:'Профилот е зачуван',secT:'Безбедност',chPass:'Промени лозинка',chEmail:'Промени е-пошта',newEmail:'Нова е-пошта',emailSent:'Испратена е порака за потврда на новата адреса',delAcc:'Избриши сметка',delAccWarn:'Ова трајно ги брише вашата сметка, сите ваши огласи и фотографии. Не може да се врати. Да продолжам?',delAccDone:'Сметката е избришана',fHelp:'Помош',fPrivacy:'Политика за приватност',fTerms:'Услови за користење',fSafety:'Безбедно тргување',fContact:'Контакт',pageTitle:'Пазарче – огласи од Македонија',post:'Објави оглас',search:'Барај огласи…',all:'Сите',allCities:'Сите градови',max:'Макс. цена €',n:'огласи',new:'Најнови',lo:'Цена: ниска → висока',hi:'Цена: висока → ниска',call:'Повикај',cancel:'Откажи',publish:'Објави',ptitle:'Нов оглас',title:'Наслов',category:'Категорија',city:'Град',priceEur:'Цена (€)',phone:'Телефон',desc:'Опис',none:'Нема огласи за овие филтри. Пробај друг град или категорија.',done:'Огласот е објавен',close:'Затвори',free:'Бесплатно',login:'Најава',reg:'Регистрација',logout:'Одјава',name:'Име',email:'Е-пошта',pass:'Лозинка (мин. 6 знаци)',haveAcc:'Веќе имаш профил? Најави се',noAcc:'Немаш профил? Регистрирај се',bad:'Погрешна е-пошта или лозинка',exists:'Профил со оваа е-пошта веќе постои',welcome:'Добредојде',needLogin:'Регистрирај се или најави се за да објавиш оглас',cond:'Состојба',anyCond:'Сите состојби',newC:'Нов',usedC:'Користен',photo:'Слики (до 6)',top:'ТОП',bye:'Одјавени сте',browse:'Сите огласи',saved:'Зачувани',mine:'Мои огласи',needLogin2:'Најави се за да ги видиш твоите огласи',needLoginFav:'Најави се за да зачуваш огласи',needLoginRep:'Најави се за да пријавиш оглас',noFav:'Се уште немаш зачувани огласи. Тапни на срцето на оглас за да го зачуваш.',noMine:'Се уште немаш објавено огласи. Притисни „Објави оглас“.',del:'Избриши',confirmDel:'Да го избришам огласот?',renew:'Обнови',report:'Пријави',reportT:'Пријави оглас',reason:'Причина',note:'Забелешка (опционално)',send:'Испрати',r1:'Измама или лажен оглас',r2:'Погрешна категорија',r3:'Веќе продадено',r4:'Забранет предмет',reported:'Пријавата е испратена',dup:'Веќе го пријавивте овој оглас',deleted:'Огласот е избришан',renewed:'Огласот е обновен',confirm:'Провери ја е-поштата и потврди го профилот, па најави се',err:'Нешто тргна наопаку. Обиди се повторно.',cfg:'Сајтот сè уште не е поврзан со базата (Supabase).',rate:'Премногу обиди. Почекај малку.',limit:'Достигнат е дневниот лимит од 10 огласи',susp:'Вашиот профил е суспендиран',loading:'Се вчитува…',today:'денес',edit:'Уреди',editT:'Уреди оглас',save:'Зачувај',upd:'Огласот е ажуриран',maxPh:'Најмногу 10 слики по оглас',forgot:'Заборавена лозинка?',needEmail:'Прво внеси ја твојата е-пошта',resetSent:'Ако профилот постои, испративме линк за нова лозинка',newPassT:'Нова лозинка',newPass:'Внеси нова лозинка (мин. 6 знаци)',passDone:'Лозинката е променета',share:'Сподели',copied:'Линкот е копиран',filt:'Филтри',hidB:'Скриен',rooms:'соби'},
 en:{brand:'Пазарче',catT:'Categories',latestT:'Latest listings',hs1:'Free to post',hs2:'cities',hs3:'Macedonian, Albanian and English',ctaT:'Got something to sell?',ctaP:'Post a free listing in under a minute.',ssSave:'🔔 Save search',ssName:'Name for this search',ssT:'Saved searches',ssNone:'No saved searches yet.',ssDone:'Search saved',ssLimit:'At most 7 saved searches',rvT:'Recently viewed',rvClear:'Clear',sellerOnly:'Listings from one seller',sellerAll:'Show all',k_sale:'For sale',k_rent:'For rent',k_wanted:'Wanted to buy',k_wantrent:'Wanted to rent',k_hiring:'Hiring',k_jobwanted:'Looking for work',kindL:'Ad type',anyKind:'All types',subL:'Subcategory',priceL:'Price',ptL:'Price type',ptFixed:'Fixed',ptNeg:'Negotiable',ptNegS:'negotiable',ptFree:'Free',ptSwap:'Swap',curL:'Currency',videoL:'YouTube link (optional)',badVideo:'Invalid YouTube link',needPrice:'Enter a price',cover:'Cover',makeCover:'Set as cover',contactL:'Also contact via:',curS:'MKD',heroT:'Buy and sell across North Macedonia',heroP:'Free listings for vehicles, real estate, electronics, jobs and more.',postFree:'Post a listing for free',minP:'Min price €',clearF:'Clear filters',newB:'NEW',vList:'List',vGrid:'Grid',acct:'My account',accT:'My account',profile:'Profile',defPhone:'Phone for listings (optional)',saveProf:'Save profile',profSaved:'Profile saved',secT:'Security',chPass:'Change password',chEmail:'Change email',newEmail:'New email',emailSent:'A confirmation was sent to the new address',delAcc:'Delete account',delAccWarn:'This permanently deletes your account, all your listings and photos. It cannot be undone. Continue?',delAccDone:'Account deleted',fHelp:'Help',fPrivacy:'Privacy policy',fTerms:'Terms of use',fSafety:'Trade safely',fContact:'Contact',pageTitle:'Пазарче – classifieds in North Macedonia',post:'Post a listing',search:'Search listings…',all:'All',allCities:'All cities',max:'Max price €',n:'listings',new:'Newest',lo:'Price: low → high',hi:'Price: high → low',call:'Call',cancel:'Cancel',publish:'Publish',ptitle:'New listing',title:'Title',category:'Category',city:'City',priceEur:'Price (€)',phone:'Phone',desc:'Description',none:'No listings match these filters. Try another city or category.',done:'Listing published',close:'Close',free:'Free',login:'Log in',reg:'Register',logout:'Log out',name:'Name',email:'Email',pass:'Password (min. 6 characters)',haveAcc:'Already have an account? Log in',noAcc:'No account yet? Register',bad:'Wrong email or password',exists:'An account with this email already exists',welcome:'Welcome',needLogin:'Register or log in to post a listing',cond:'Condition',anyCond:'Any condition',newC:'New',usedC:'Used',photo:'Photos (up to 6)',top:'TOP',bye:'You’re logged out',browse:'All listings',saved:'Saved',mine:'My listings',needLogin2:'Log in to see your listings',needLoginFav:'Log in to save listings',needLoginRep:'Log in to report a listing',noFav:'No saved listings yet. Tap the heart on a listing to save it.',noMine:'You haven’t posted anything yet. Press “Post a listing”.',del:'Delete',confirmDel:'Delete this listing?',renew:'Renew',report:'Report',reportT:'Report listing',reason:'Reason',note:'Note (optional)',send:'Send',r1:'Scam or fake listing',r2:'Wrong category',r3:'Already sold',r4:'Prohibited item',reported:'Report sent',dup:'You already reported this listing',deleted:'Listing deleted',renewed:'Listing renewed',confirm:'Check your email to confirm your account, then log in',err:'Something went wrong. Please try again.',cfg:'The site isn’t connected to Supabase yet.',rate:'Too many attempts. Please wait a bit.',limit:'Daily limit of 10 listings reached',susp:'Your account has been suspended',loading:'Loading…',today:'today',edit:'Edit',editT:'Edit listing',save:'Save',upd:'Listing updated',maxPh:'Maximum 10 photos per listing',forgot:'Forgot password?',needEmail:'Enter your email first',resetSent:'If an account exists, we sent a password reset link',newPassT:'New password',newPass:'Enter a new password (min. 6 characters)',passDone:'Password changed',share:'Share',copied:'Link copied',filt:'Filters',hidB:'Hidden',rooms:'rooms'},
-sq:{brand:'Pazarçe',catT:'Kategoritë',latestT:'Njoftimet e fundit',hs1:'Postim falas',hs2:'qytete',hs3:'Maqedonisht, shqip dhe anglisht',ctaT:'Keni diçka për të shitur?',ctaP:'Postoni njoftim falas për më pak se një minutë.',ssSave:'🔔 Ruaj kërkimin',ssName:'Emri i kërkimit',ssT:'Kërkime të ruajtura',ssNone:'Nuk keni kërkime të ruajtura.',ssDone:'Kërkimi u ruajt',ssLimit:'Më së shumti 7 kërkime të ruajtura',rvT:'Parë së fundmi',rvClear:'Pastro',sellerOnly:'Njoftime nga një shitës',sellerAll:'Shfaq të gjitha',k_sale:'Në shitje',k_rent:'Me qira',k_wanted:'Kërkohet për blerje',k_wantrent:'Kërkohet me qira',k_hiring:'Punësojmë',k_jobwanted:'Kërkoj punë',kindL:'Lloji i njoftimit',anyKind:'Të gjitha llojet',subL:'Nënkategoria',priceL:'Çmimi',ptL:'Lloji i çmimit',ptFixed:'Fikse',ptNeg:'Me marrëveshje',ptNegS:'me marrëveshje',ptFree:'Falas',ptSwap:'Këmbim',curL:'Monedha',videoL:'Link YouTube (opsionale)',badVideo:'Link YouTube i pavlefshëm',needPrice:'Vendosni çmimin',cover:'Kryesore',makeCover:'Bëje kryesore',contactL:'Kontakt edhe përmes:',curS:'MKD',heroT:'Bli dhe shit në mbarë Maqedoninë',heroP:'Njoftime falas për automjete, patundshmëri, elektronikë, punë dhe më shumë.',postFree:'Posto njoftim falas',minP:'Çmimi min. €',clearF:'Pastro filtrat',newB:'E RE',vList:'Listë',vGrid:'Rrjetë',acct:'Llogaria ime',accT:'Llogaria ime',profile:'Profili',defPhone:'Telefoni për njoftime (opsionale)',saveProf:'Ruaj profilin',profSaved:'Profili u ruajt',secT:'Siguria',chPass:'Ndrysho fjalëkalimin',chEmail:'Ndrysho emailin',newEmail:'Email i ri',emailSent:'Një mesazh konfirmimi u dërgua në adresën e re',delAcc:'Fshi llogarinë',delAccWarn:'Kjo fshin përgjithmonë llogarinë, të gjitha njoftimet dhe fotot tuaja. Nuk mund të kthehet. Të vazhdoj?',delAccDone:'Llogaria u fshi',fHelp:'Ndihma',fPrivacy:'Politika e privatësisë',fTerms:'Kushtet e përdorimit',fSafety:'Tregtim i sigurt',fContact:'Kontakt',pageTitle:'Pazarçe – njoftime nga Maqedonia e Veriut',post:'Posto njoftim',search:'Kërko njoftime…',all:'Të gjitha',allCities:'Të gjitha qytetet',max:'Çmimi maks. €',n:'njoftime',new:'Më të rejat',lo:'Çmimi: nga i ulëti te i larti',hi:'Çmimi: nga i larti te i ulëti',call:'Telefono',cancel:'Anulo',publish:'Publiko',ptitle:'Njoftim i ri',title:'Titulli',category:'Kategoria',city:'Qyteti',priceEur:'Çmimi (€)',phone:'Telefoni',desc:'Përshkrimi',none:'Nuk ka njoftime për këto filtra. Provo një qytet ose kategori tjetër.',done:'Njoftimi u publikua',close:'Mbyll',free:'Falas',login:'Hyr',reg:'Regjistrohu',logout:'Dil',name:'Emri',email:'Email',pass:'Fjalëkalimi (min. 6 karaktere)',haveAcc:'Ke tashmë llogari? Hyr',noAcc:'Nuk ke llogari? Regjistrohu',bad:'Email ose fjalëkalim i gabuar',exists:'Ekziston tashmë një llogari me këtë email',welcome:'Mirë se erdhe',needLogin:'Regjistrohu ose hyr për të postuar një njoftim',cond:'Gjendja',anyCond:'Çdo gjendje',newC:'I ri',usedC:'I përdorur',photo:'Foto (deri në 6)',top:'TOP',bye:'Ke dalë nga llogaria',browse:'Të gjitha njoftimet',saved:'Të ruajtura',mine:'Njoftimet e mia',needLogin2:'Hyr për të parë njoftimet e tua',needLoginFav:'Hyr për të ruajtur njoftime',needLoginRep:'Hyr për të raportuar një njoftim',noFav:'Ende nuk ke njoftime të ruajtura. Shtyp zemrën te një njoftim për ta ruajtur.',noMine:'Ende nuk ke postuar asgjë. Shtyp “Posto njoftim”.',del:'Fshi',confirmDel:'Ta fshij njoftimin?',renew:'Rinovo',report:'Raporto',reportT:'Raporto njoftimin',reason:'Arsyeja',note:'Shënim (opsional)',send:'Dërgo',r1:'Mashtrim ose njoftim i rremë',r2:'Kategori e gabuar',r3:'Tashmë i shitur',r4:'Send i ndaluar',reported:'Raportimi u dërgua',dup:'E ke raportuar tashmë këtë njoftim',deleted:'Njoftimi u fshi',renewed:'Njoftimi u rinovua',confirm:'Kontrollo email-in dhe konfirmo llogarinë, pastaj hyr',err:'Diçka shkoi keq. Provo përsëri.',cfg:'Faqja ende nuk është lidhur me bazën e të dhënave (Supabase).',rate:'Shumë përpjekje. Prit pak.',limit:'U arrit kufiri ditor prej 10 njoftimesh',susp:'Llogaria jote është pezulluar',loading:'Po ngarkohet…',today:'sot',edit:'Ndrysho',editT:'Ndrysho njoftimin',save:'Ruaj',upd:'Njoftimi u përditësua',maxPh:'Maksimumi 10 foto për njoftim',forgot:'E harrove fjalëkalimin?',needEmail:'Shkruaj fillimisht email-in',resetSent:'Nëse llogaria ekziston, dërguam një lidhje për fjalëkalim të ri',newPassT:'Fjalëkalim i ri',newPass:'Shkruaj fjalëkalimin e ri (min. 6 karaktere)',passDone:'Fjalëkalimi u ndryshua',share:'Ndaj',copied:'Lidhja u kopjua',filt:'Filtra',hidB:'I fshehur',rooms:'dhoma'}};
+sq:{brand:'Pazarçe',catT:'Kategoritë',latestT:'Njoftimet e fundit',hs1:'Postim falas',hs2:'qytete',hs3:'Maqedonisht, shqip dhe anglisht',ctaT:'Keni diçka për të shitur?',ctaP:'Postoni njoftim falas për më pak se një minutë.',ssSave:'🔔 Ruaj kërkimin',ssName:'Emri i kërkimit',ssT:'Kërkime të ruajtura',ssNone:'Nuk keni kërkime të ruajtura.',ssDone:'Kërkimi u ruajt',ssLimit:'Më së shumti 7 kërkime të ruajtura',rvT:'Parë së fundmi',rvClear:'Pastro',sellerOnly:'Njoftime nga një shitës',sellerAll:'Shfaq të gjitha',k_sale:'Në shitje',k_rent:'Me qira',k_wanted:'Kërkohet për blerje',k_wantrent:'Kërkohet me qira',k_hiring:'Punësojmë',k_jobwanted:'Kërkoj punë',kindL:'Lloji i njoftimit',anyKind:'Të gjitha llojet',subL:'Nënkategoria',priceL:'Çmimi',ptL:'Lloji i çmimit',ptFixed:'Fikse',ptNeg:'Me marrëveshje',ptNegS:'me marrëveshje',ptFree:'Falas',ptSwap:'Këmbim',curL:'Monedha',videoL:'Link YouTube (opsionale)',badVideo:'Link YouTube i pavlefshëm',needPrice:'Vendosni çmimin',cover:'Kryesore',makeCover:'Bëje kryesore',contactL:'Kontakt edhe përmes:',curS:'MKD',heroT:'Bli dhe shit në mbarë Maqedoninë',heroP:'Njoftime falas për automjete, patundshmëri, elektronikë, punë dhe më shumë.',postFree:'Posto njoftim falas',minP:'Çmimi min. €',clearF:'Pastro filtrat',newB:'E RE',vList:'Listë',vGrid:'Rrjetë',acct:'Llogaria ime',accT:'Llogaria ime',profile:'Profili',defPhone:'Telefoni për njoftime (opsionale)',saveProf:'Ruaj profilin',profSaved:'Profili u ruajt',secT:'Siguria',chPass:'Ndrysho fjalëkalimin',chEmail:'Ndrysho emailin',newEmail:'Email i ri',emailSent:'Një mesazh konfirmimi u dërgua në adresën e re',delAcc:'Fshi llogarinë',delAccWarn:'Kjo fshin përgjithmonë llogarinë, të gjitha njoftimet dhe fotot tuaja. Nuk mund të kthehet. Të vazhdoj?',delAccDone:'Llogaria u fshi',fHelp:'Ndihma',fPrivacy:'Politika e privatësisë',fTerms:'Kushtet e përdorimit',fSafety:'Tregtim i sigurt',fContact:'Kontakt',pageTitle:'Pazarçe – njoftime nga Maqedonia e Veriut',post:'Posto njoftim',search:'Kërko njoftime…',all:'Të gjitha',allCities:'Të gjitha qytetet',max:'Çmimi maks. €',n:'njoftime',new:'Më të rejat',lo:'Çmimi: nga i ulëti te i larti',hi:'Çmimi: nga i larti te i ulëti',call:'Telefono',cancel:'Anulo',publish:'Publiko',ptitle:'Njoftim i ri',title:'Titulli',category:'Kategoria',city:'Qyteti',priceEur:'Çmimi (€)',phone:'Telefoni',desc:'Përshkrimi',none:'Nuk ka njoftime për këto filtra. Provo një qytet ose kategori tjetër.',done:'Njoftimi u publikua',close:'Mbyll',free:'Falas',login:'Hyr',reg:'Regjistrohu',logout:'Dil',name:'Emri',email:'Email',pass:'Fjalëkalimi (min. 6 karaktere)',haveAcc:'Ke tashmë llogari? Hyr',noAcc:'Nuk ke llogari? Regjistrohu',bad:'Email ose fjalëkalim i gabuar',exists:'Ekziston tashmë një llogari me këtë email',welcome:'Mirë se erdhe',needLogin:'Regjistrohu ose hyr për të postuar një njoftim',cond:'Gjendja',anyCond:'Çdo gjendje',newC:'I ri',usedC:'I përdorur',photo:'Foto (deri në 6)',top:'TOP',bye:'Ke dalë nga llogaria',browse:'Të gjitha njoftimet',saved:'Ruajtur',mine:'Njoftimet e mia',needLogin2:'Hyr për të parë njoftimet e tua',needLoginFav:'Hyr për të ruajtur njoftime',needLoginRep:'Hyr për të raportuar një njoftim',noFav:'Ende nuk ke njoftime të ruajtura. Shtyp zemrën te një njoftim për ta ruajtur.',noMine:'Ende nuk ke postuar asgjë. Shtyp “Posto njoftim”.',del:'Fshi',confirmDel:'Ta fshij njoftimin?',renew:'Rinovo',report:'Raporto',reportT:'Raporto njoftimin',reason:'Arsyeja',note:'Shënim (opsional)',send:'Dërgo',r1:'Mashtrim ose njoftim i rremë',r2:'Kategori e gabuar',r3:'Tashmë i shitur',r4:'Send i ndaluar',reported:'Raportimi u dërgua',dup:'E ke raportuar tashmë këtë njoftim',deleted:'Njoftimi u fshi',renewed:'Njoftimi u rinovua',confirm:'Kontrollo email-in dhe konfirmo llogarinë, pastaj hyr',err:'Diçka shkoi keq. Provo përsëri.',cfg:'Faqja ende nuk është lidhur me bazën e të dhënave (Supabase).',rate:'Shumë përpjekje. Prit pak.',limit:'U arrit kufiri ditor prej 10 njoftimesh',susp:'Llogaria jote është pezulluar',loading:'Po ngarkohet…',today:'sot',edit:'Ndrysho',editT:'Ndrysho njoftimin',save:'Ruaj',upd:'Njoftimi u përditësua',maxPh:'Maksimumi 10 foto për njoftim',forgot:'E harrove fjalëkalimin?',needEmail:'Shkruaj fillimisht email-in',resetSent:'Nëse llogaria ekziston, dërguam një lidhje për fjalëkalim të ri',newPassT:'Fjalëkalim i ri',newPass:'Shkruaj fjalëkalimin e ri (min. 6 karaktere)',passDone:'Fjalëkalimi u ndryshua',share:'Ndaj',copied:'Lidhja u kopjua',filt:'Filtra',hidB:'I fshehur',rooms:'dhoma'}};
 var LI={mk:0,en:1,sq:2},LANGS=['mk','sq','en'];
 /* key, emoji, mk, en, color, sq */
 var CATS=[['car','🚗','Возила','Vehicles','#dbe9f7','Automjete'],['home','🏠','Недвижности','Real estate','#f3e3cf','Patundshmëri'],['tech','📱','Електроника','Electronics','#e0e0f5','Elektronikë'],['house','🛋️','Дом и градина','Home & garden','#e2f0d9','Shtëpi dhe kopsht'],['fash','👕','Облека','Fashion','#f5dde8','Veshje'],['job','💼','Работа','Jobs','#f0ecd0','Punë'],['serv','🔧','Услуги','Services','#d9efee','Shërbime'],['sport','⚽','Спорт и рекреација','Sports','#d6efdc','Sport dhe rekreacion'],['pet','🐕','Миленичиња','Pets','#f4e2d4','Kafshë shtëpiake'],['part','🔩','Авто делови и гуми','Auto parts & tires','#e6e6e6','Pjesë këmbimi dhe goma'],['appl','🧊','Бела техника','Appliances','#d8eaf0','Pajisje shtëpiake'],['other','📦','Останато','Other','#e9e4f3','Të tjera']];
@@ -470,7 +500,7 @@ function pickLang(){
   return 'mk';
 }
 var L=pickLang();
-var D=[],cat='all',U=null,mode='reg',view='all',RT=null,FAV=new Set(),lastUid,loaded=false,EDIT=null,PICS=[],ORIG=[],sub='all',seller=null,SS=[],PEND=null,favReady=false;
+var PHOTOS=false,D=[],cat='all',U=null,mode='reg',view='all',RT=null,FAV=new Set(),lastUid,loaded=false,EDIT=null,PICS=[],ORIG=[],sub='all',seller=null,SS=[],PEND=null,favReady=false;
 
 function $(i){return document.getElementById(i)}
 function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
@@ -687,10 +717,10 @@ function priceOk(d,mn,mx){if(isNaN(mn)&&isNaN(mx))return true;var v=pk(d);if(v==
 function prc(a,b,s){var x=pk(a),y=pk(b);if(x===null||y===null)return(x===null)-(y===null);return s=='lo'?x-y:y-x}
 function render(){
   var t=T[L],q=$('q').value.trim().toLowerCase(),kd=$('kind').value,cd=$('cond').value,city=$('city').value,mx=parseFloat($('max').value),mn=parseFloat($('min').value),s=$('sort').value;
-  var nf=(city!='all'?1:0)+(!isNaN(mx)?1:0)+(!isNaN(mn)?1:0)+(cd!='all'?1:0)+(s!='new'?1:0)+($('kind').value!='all'?1:0);
+  var nf=(PHOTOS?1:0)+(city!='all'?1:0)+(!isNaN(mx)?1:0)+(!isNaN(mn)?1:0)+(cd!='all'?1:0)+(s!='new'?1:0)+($('kind').value!='all'?1:0);
   $('ftog').textContent='⚙ '+t.filt+(nf?' ('+nf+')':'');$('fclr').hidden=!(nf||q);$('ssave').hidden=!(nf||q||cat!='all');$('ssave').textContent=t.ssSave;$('sbar').hidden=!seller;$('sbt').textContent=t.sellerOnly;$('sbx').textContent=t.sellerAll;recent(nf||q||cat!='all'||seller||view!='all');
   var r=D.filter(function(d){
-    return(view=='all'||(view=='fav'&&FAV.has(d.id))||(view=='mine'&&U&&d.owner==U.id))&&(!seller||d.owner==seller)&&(cat=='all'||d.c==cat)&&(cat=='all'||sub=='all'||d.sub==sub)&&(kd=='all'||d.kind==kd)&&(cd=='all'||d.cond==cd)&&(city=='all'||d.city==city)&&priceOk(d,mn,mx)&&(!q||(d.t+' '+d.dm).toLowerCase().indexOf(q)>-1)});
+    return(view=='all'||(view=='fav'&&FAV.has(d.id))||(view=='mine'&&U&&d.owner==U.id))&&(!seller||d.owner==seller)&&(cat=='all'||d.c==cat)&&(cat=='all'||sub=='all'||d.sub==sub)&&(kd=='all'||d.kind==kd)&&(cd=='all'||d.cond==cd)&&(city=='all'||d.city==city)&&priceOk(d,mn,mx)&&(!PHOTOS||!!d.img)&&(!q||(d.t+' '+d.dm).toLowerCase().indexOf(q)>-1)});
   r.sort(function(a,b){return(b.top?1:0)-(a.top?1:0)||(s=='new'?a.age-b.age:prc(a,b,s))});
   $('count').textContent=r.length+' '+t.n;
   var g=$('grid');g.textContent='';
@@ -777,7 +807,7 @@ function startPost(){
 /* ───── events ───── */
 function setLang(l){L=l;try{localStorage.setItem('lang',l)}catch(e){}labels();render()}
 $('lang').onchange=function(){setLang(this.value)};
-$('ftog').onclick=function(){var o=$('filters').classList.toggle('open');this.setAttribute('aria-expanded',o)};
+$('ftog').onclick=function(){if(window.matchMedia('(max-width:640px)').matches&&window.openSearch){openSearch();return}var o=$('filters').classList.toggle('open');this.setAttribute('aria-expanded',o)};
 ['q','min','max'].forEach(function(i){$(i).oninput=render});['city','sort','cond','kind'].forEach(function(i){$(i).onchange=render});
 function authOpen(m,msg){mode=m;var t=T[L];$('atitle').textContent=m=='reg'?t.reg:t.login;$('nameL').style.display=m=='reg'?'':'none';$('aname').required=m=='reg';$('apass').autocomplete=m=='reg'?'new-password':'current-password';$('asubmit').textContent=m=='reg'?t.reg:t.login;$('aswitch').textContent=m=='reg'?t.haveAcc:t.noAcc;$('aforgot').style.display=m=='login'?'':'none';$('acancel').textContent=t.cancel;$('aerr').textContent=msg||'';if(!$('auth').open)$('auth').showModal()}
 $('aswitch').onclick=function(){authOpen(mode=='reg'?'login':'reg')};
@@ -791,7 +821,7 @@ $('qbtn').onclick=function(){window.scrollTo({top:0,behavior:'smooth'});setTimeo
 try{new IntersectionObserver(function(en){$('qbtn').hidden=en[0].isIntersecting}).observe(document.querySelector('.hero'))}catch(e){}
 $('post').onclick=startPost;$('fab').onclick=startPost;$('hpost').onclick=startPost;
 $('sbx').onclick=function(){seller=null;try{history.replaceState(null,'',location.pathname+(L=='mk'?'':'?lang='+L))}catch(e){}render()};
-$('fclr').onclick=function(){$('q').value='';$('min').value='';$('max').value='';$('city').value='all';$('cond').value='all';$('kind').value='all';$('sort').value='new';render()};
+$('fclr').onclick=function(){PHOTOS=false;$('q').value='';$('min').value='';$('max').value='';$('city').value='all';$('cond').value='all';$('kind').value='all';$('sort').value='new';render()};
 var LV=false;try{LV=localStorage.getItem('lv')=='list'}catch(e){}
 function setVT(){var t=T[L];$('grid').classList.toggle('list',LV);$('vtog').textContent=LV?'▦ '+t.vGrid:'☰ '+t.vList}
 $('vtog').onclick=function(){LV=!LV;try{localStorage.setItem('lv',LV?'list':'grid')}catch(e){}setVT()};
@@ -985,7 +1015,7 @@ if(sb){
   function on(k){Object.keys(btns).forEach(function(x){if(x!='bd')btns[x].classList.toggle('on',x==k)})}
   function clickIf(id){var e=$(id);if(e)e.click()}
   btns.home.onclick=function(){on('home');var f=document.querySelector('#tabs .chip');if(f&&f.getAttribute('aria-pressed')!='true')f.click();window.scrollTo({top:0,behavior:'smooth'})};
-  btns.search.onclick=function(){on('search');window.scrollTo({top:0,behavior:'smooth'});setTimeout(function(){var q=$('q');if(q)q.focus()},250)};
+  btns.search.onclick=function(){if(window.openSearch){openSearch()}else{window.scrollTo({top:0,behavior:'smooth'})}};
   btns.post.onclick=function(){clickIf('fab')};
   btns.saved.onclick=function(){var h=$('hfav');if(!h||h.hidden){clickIf('login')}else{on('saved');h.click()}};
   btns.acct.onclick=function(){var a=$('acct');if(a&&!a.hidden)a.click();else clickIf('login')};
@@ -997,9 +1027,94 @@ if(sb){
 </script>
 <script>
 (function(){
-  var F=document.getElementById('form'),A=document.getElementById('auth'),C=document.getElementById('acc');
-  if(!F||!A||!C||!history.pushState)return;
-  var ROUTES=['/post','/login','/register','/account'];
+  function $(i){return document.getElementById(i)}
+  function mk(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+  var SPT={mk:{title:'Пребарување',cat:'Сите категории',sub:'Сите подкатегории',photos:'Само со слики',go:'Барај',clear:'Исчисти'},
+           sq:{title:'Kërkim',cat:'Të gjitha kategoritë',sub:'Të gjitha nënkategoritë',photos:'Vetëm me foto',go:'Kërko',clear:'Pastro'},
+           en:{title:'Search',cat:'All categories',sub:'All subcategories',photos:'Only with photos',go:'Search',clear:'Clear'}};
+  var d=document.createElement('dialog');d.id='sp';
+  d.innerHTML='<form class="dlg sp" id="spf" novalidate><h2 id="spT"></h2>'
+   +'<label class="sfld"><input id="sp_q" type="search" enterkeyhint="search" autocomplete="off"></label>'
+   +'<label class="sfld"><select id="sp_cat"></select></label>'
+   +'<label class="sfld" id="sp_subw" hidden><select id="sp_sub"></select></label>'
+   +'<label class="sfld"><select id="sp_city"></select></label>'
+   +'<div class="two"><input id="sp_min" type="number" inputmode="numeric" min="0"><input id="sp_max" type="number" inputmode="numeric" min="0"></div>'
+   +'<label class="sfld"><select id="sp_cond"></select></label>'
+   +'<label class="sfld"><select id="sp_kind"></select></label>'
+   +'<label class="sfld"><select id="sp_sort"></select></label>'
+   +'<label class="sw"><span id="spPh"></span><input type="checkbox" id="sp_ph" role="switch"></label>'
+   +'<button type="submit" class="btn go" id="sp_go"></button>'
+   +'<button type="button" class="clr" id="sp_clear"></button></form>';
+  document.body.appendChild(d);
+  function x(){return SPT[L]||SPT.mk}
+  function subs(){
+    var c=$('sp_cat').value,ss=c!='all'?SUBS[c]:null;
+    $('sp_subw').hidden=!ss;
+    if(ss)$('sp_sub').innerHTML='<option value="all">'+x().sub+'</option>'+ss.map(function(s){return'<option value="'+s[0]+'">'+s[1+LI[L]]+'</option>'}).join('');
+  }
+  function fill(){
+    var t=T[L];
+    $('spT').textContent=x().title;$('sp_q').placeholder=t.search;$('sp_q').value=$('q').value;
+    $('sp_cat').innerHTML='<option value="all">'+x().cat+'</option>'+CATS.map(function(c){return'<option value="'+c[0]+'">'+c[1]+' '+cn(c)+'</option>'}).join('');
+    $('sp_cat').value=cat;subs();if(cat!='all')$('sp_sub').value=sub;
+    ['city','cond','kind','sort'].forEach(function(k){$('sp_'+k).innerHTML=$(k).innerHTML;$('sp_'+k).value=$(k).value});
+    $('sp_min').placeholder=t.minP;$('sp_max').placeholder=t.max;$('sp_min').value=$('min').value;$('sp_max').value=$('max').value;
+    $('sp_ph').checked=PHOTOS;$('spPh').textContent=x().photos;$('sp_go').textContent=x().go;$('sp_clear').textContent=x().clear;
+  }
+  $('sp_cat').onchange=subs;
+  $('spf').onsubmit=function(e){
+    e.preventDefault();
+    PHOTOS=$('sp_ph').checked;
+    var p={},v;
+    if(v=$('sp_q').value.trim())p.q=v;
+    if($('sp_cat').value!='all'){p.cat=$('sp_cat').value;if($('sp_sub').value&&$('sp_sub').value!='all')p.sub=$('sp_sub').value}
+    [['city','city'],['min','min'],['max','max'],['cond','cond'],['kind','kind'],['sort','sort']].forEach(function(k){v=$('sp_'+k[0]).value;if(v&&v!='all'&&!(k[0]=='sort'&&v=='new'))p[k[1]]=v});
+    applyParams(p);
+    d.close();
+    setTimeout(function(){window.scrollTo({top:Math.max(0,$('count').getBoundingClientRect().top+window.scrollY-90),behavior:'smooth'})},400);
+  };
+  $('sp_clear').onclick=function(){
+    $('sp_q').value='';$('sp_min').value='';$('sp_max').value='';$('sp_ph').checked=false;
+    $('sp_cat').value='all';subs();
+    ['city','cond','kind'].forEach(function(k){$('sp_'+k).value='all'});$('sp_sort').value='new';
+  };
+  window.openSearch=function(){fill();d.showModal()};
+
+  /* featured row (only when there are enough listings and no filters) */
+  var feat=$('feat'),FT={mk:'Издвоени огласи',sq:'Njoftime të zgjedhura',en:'Featured listings'};
+  function build(){
+    if(!feat)return;
+    var g=$('grid');if(g)g.setAttribute('data-n',g.querySelectorAll('.card').length);
+    var active=$('q').value.trim()||cat!='all'||seller||view!='all'||PHOTOS||$('city').value!='all'||$('cond').value!='all'||$('kind').value!='all'||$('min').value||$('max').value||$('sort').value!='new';
+    var vis=D.filter(function(z){return !z.hid}),items=vis.filter(function(z){return z.img}).sort(function(a,b){return(b.top?1:0)-(a.top?1:0)||a.age-b.age});
+    if(active||vis.length<6||items.length<4){feat.hidden=true;feat.textContent='';return}
+    feat.hidden=false;feat.textContent='';
+    feat.appendChild(mk('h2','fh',FT[L]||FT.mk));
+    var row=mk('div','frow');
+    items.slice(0,8).forEach(function(z){
+      var a=mk('a','fcard');a.href=listingUrl(z)+(L=='mk'?'':'?lang='+L);
+      a.appendChild(mkImg(z.img,'',true));
+      var o=mk('div','fov');o.appendChild(mk('b','',z.t));o.appendChild(mk('span','fpr',fmtPrice(z)));a.appendChild(o);row.appendChild(a);
+    });
+    feat.appendChild(row);
+  }
+  var _r=render;
+  render=function(){var r=_r.apply(this,arguments);try{build()}catch(e){}return r};
+  try{build()}catch(e){}
+
+  /* back to top */
+  var tt=mk('button');tt.type='button';tt.id='totop';tt.hidden=true;tt.setAttribute('aria-label','Top');
+  tt.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+  tt.onclick=function(){window.scrollTo({top:0,behavior:'smooth'})};
+  document.body.appendChild(tt);
+  window.addEventListener('scroll',function(){tt.hidden=window.scrollY<700},{passive:true});
+})();
+</script>
+<script>
+(function(){
+  var F=document.getElementById('form'),A=document.getElementById('auth'),C=document.getElementById('acc'),S=document.getElementById('sp');
+  if(!F||!A||!C||!S||!history.pushState)return;
+  var ROUTES=['/post','/login','/register','/account','/search'];
   function isRoute(p){return ROUTES.indexOf(p)>-1}
   function patch(d,pathFn){
     var show=d.showModal.bind(d);
@@ -1027,9 +1142,10 @@ if(sb){
   patch(F,function(){return '/post'});
   patch(A,function(){return window.mode=='reg'?'/register':'/login'});
   patch(C,function(){return '/account'});
+  patch(S,function(){return '/search'});
   window.addEventListener('popstate',function(){
-    if(!isRoute(location.pathname)){[F,A,C].forEach(function(d){if(d.open)d.close()})}
-    else if(!F.open&&!A.open&&!C.open){history.replaceState(null,'','/'+location.search)}
+    if(!isRoute(location.pathname)){[F,A,C,S].forEach(function(d){if(d.open)d.close()})}
+    else if(!F.open&&!A.open&&!C.open&&!S.open){history.replaceState(null,'','/'+location.search)}
   });
   /* opened directly at /post, /login or /register */
   var path=location.pathname;
@@ -1039,6 +1155,7 @@ if(sb){
       if(typeof lastUid!=='undefined'||++n>40){
         clearInterval(t);
         if(path=='/post')startPost();
+        else if(path=='/search')openSearch();
         else if(path=='/account'){if(window.U)openAcc();else authOpen('login')}
         else if(!window.U)authOpen(path=='/register'?'reg':'login');
       }
