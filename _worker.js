@@ -163,9 +163,9 @@ header{background:var(--bg);color:var(--hd);padding:0}
 header .in{display:flex;align-items:center;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
 header::after{content:"";display:block;height:9px;background:var(--awn)}
 header a{display:inline-flex;align-items:center;gap:9px;font-family:var(--fd);font-weight:700;font-size:19px;letter-spacing:-.3px;color:var(--hd);text-decoration:none}
-.lgb{position:relative;width:34px;height:34px;border-radius:9px;background:var(--pine);overflow:hidden;display:grid;place-items:center;color:var(--pine-ink);font-size:14px;flex:none}
-.lgb i{position:absolute;left:0;right:0;top:0;height:9px;background:repeating-linear-gradient(90deg,#ee6a12 0 8px,#fdf8ee 8px 16px)}
-.lgb u{text-decoration:none;margin-top:6px}
+.lgb{position:relative;width:34px;height:34px;border-radius:9px;background:var(--pine);overflow:hidden;display:grid;place-items:center;color:#f7f1e3;font-size:23px;font-weight:800;line-height:1;font-family:Onest,"Trebuchet MS","Segoe UI",system-ui,sans-serif;flex:none}
+.lgb i{position:absolute;left:0;right:0;top:0;height:4px;background:#e85d0a}
+.lgb u{text-decoration:none;margin-top:3px}
 .card{border-radius:16px;box-shadow:var(--sh)}
 .btn{background:linear-gradient(135deg,var(--tag),color-mix(in srgb,var(--tag) 72%,#ffb347));color:var(--tag-ink);border-radius:10px}
 .btn.wa{background:#25d366;color:#08210f}.btn.vb{background:#7360f2;color:#fff}
@@ -245,7 +245,7 @@ ${canonical ? `<meta property="og:url" content="${esc(canonical)}">` : ''}
 ${image ? `<meta property="og:image" content="${esc(image)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="${esc(image)}">` : '<meta name="twitter:card" content="summary">'}
 <meta name="theme-color" content="#fdf8ee">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@500;700;800&display=swap">
-<link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.svg?v=2" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2"><link rel="manifest" href="/manifest.webmanifest">
 ${(ld || []).map((o) => `<script type="application/ld+json">${jsonLd(o)}</script>`).join('\n')}
 <style>${STYLE}</style></head><body>
 <header><div class="in"><a href="/${lang === 'mk' ? '' : '?lang=' + lang}"><span class="lgb"><i></i><u>${esc(tx.brand.charAt(0))}</u></span><span>${esc(tx.brand)}</span></a></div></header>
