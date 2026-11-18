@@ -282,6 +282,17 @@ main .cta{margin-top:90px}
   .tabbar .bd{position:absolute;top:2px;left:calc(50% + 6px);min-width:17px;height:17px;border-radius:9px;background:var(--tag);color:var(--tag-ink);font-size:10px;font-weight:700;display:grid;place-items:center;padding:0 4px}
   .tabbar .bd[hidden]{display:none}
 }
+
+/* ---- post / login / register open as their own full pages (own URL, back button works) ---- */
+dialog.pg{width:100%;max-width:none;height:100vh;height:100dvh;max-height:100vh;max-height:100dvh;margin:0;border-radius:0;background:var(--bg);overflow:auto;overscroll-behavior:contain}
+dialog.pg::backdrop{background:var(--bg)}
+.pgbar{display:none}
+dialog.pg .pgbar{display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:3;background:var(--bg);padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top,0px));border-bottom:1px solid var(--line)}
+.pgback{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer;padding:0}
+.pgback:focus,.pgback:focus-visible{outline:none}
+.pglogo{font-family:var(--fd);font-weight:700;font-size:18px;color:var(--hd);text-decoration:none}
+dialog.pg .dlg{max-width:680px;margin:0 auto;padding:18px 16px calc(40px + env(safe-area-inset-bottom,0px));background:var(--bg)}
+@media (min-width:641px){dialog.pg .dlg{margin:22px auto 40px;padding:24px 26px;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--sh)}}
 </style>
 </head>
 <body>
@@ -982,6 +993,57 @@ if(sb){
   var hn=$('hfn');if(hn)new MutationObserver(badge).observe(hn,{childList:true,characterData:true,subtree:true});
   var ln=$('lang');if(ln)ln.addEventListener('change',function(){setTimeout(labels,0)});
   labels();badge();on('home');
+})();
+</script>
+<script>
+(function(){
+  var F=document.getElementById('form'),A=document.getElementById('auth'),C=document.getElementById('acc');
+  if(!F||!A||!C||!history.pushState)return;
+  var ROUTES=['/post','/login','/register','/account'];
+  function isRoute(p){return ROUTES.indexOf(p)>-1}
+  function patch(d,pathFn){
+    var show=d.showModal.bind(d);
+    d.classList.add('pg');
+    d.showModal=function(){
+      if(!d.open)show();
+      var path=pathFn();
+      if(location.pathname===path)return;
+      var st={pg:d.id};
+      if(isRoute(location.pathname))history.replaceState(st,'',path+location.search);
+      else history.pushState(st,'',path+location.search);
+    };
+    d.addEventListener('close',function(){
+      if(!isRoute(location.pathname))return;
+      if(history.state&&history.state.pg)history.back();
+      else history.replaceState(null,'','/'+location.search);
+    });
+    var bar=document.createElement('div');bar.className='pgbar';
+    var b=document.createElement('button');b.type='button';b.className='pgback';b.tabIndex=-1;b.setAttribute('aria-label','Back');
+    b.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
+    b.onclick=function(){d.close()};
+    var lg=document.createElement('a');lg.href='/';lg.className='pglogo';lg.textContent='Пазарче';
+    bar.appendChild(b);bar.appendChild(lg);d.insertBefore(bar,d.firstChild);
+  }
+  patch(F,function(){return '/post'});
+  patch(A,function(){return window.mode=='reg'?'/register':'/login'});
+  patch(C,function(){return '/account'});
+  window.addEventListener('popstate',function(){
+    if(!isRoute(location.pathname)){[F,A,C].forEach(function(d){if(d.open)d.close()})}
+    else if(!F.open&&!A.open&&!C.open){history.replaceState(null,'','/'+location.search)}
+  });
+  /* opened directly at /post, /login or /register */
+  var path=location.pathname;
+  if(isRoute(path)){
+    history.replaceState(null,'','/'+location.search);
+    var n=0,t=setInterval(function(){
+      if(typeof lastUid!=='undefined'||++n>40){
+        clearInterval(t);
+        if(path=='/post')startPost();
+        else if(path=='/account'){if(window.U)openAcc();else authOpen('login')}
+        else if(!window.U)authOpen(path=='/register'?'reg':'login');
+      }
+    },100);
+  }
 })();
 </script>
 </body>
