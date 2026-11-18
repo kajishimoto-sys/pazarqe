@@ -169,9 +169,9 @@ body[data-l=mk] [data-l=sq],body[data-l=mk] [data-l=en],body[data-l=sq] [data-l=
 body{font-family:"Onest","Trebuchet MS","Segoe UI",system-ui,sans-serif}
 header{background:var(--bg);color:var(--hd)}header::after{content:"";display:block;height:9px;background:var(--awn)}
 header a{font-family:var(--fd);font-weight:700;font-size:19px;letter-spacing:-.3px;display:inline-flex;align-items:center;gap:9px}
-.lgb{position:relative;width:34px;height:34px;border-radius:9px;background:var(--pine);overflow:hidden;display:grid;place-items:center;color:var(--pine-ink);font-size:14px;flex:none}
-.lgb i{position:absolute;left:0;right:0;top:0;height:9px;background:repeating-linear-gradient(90deg,#ee6a12 0 8px,#fdf8ee 8px 16px)}
-.lgb u{text-decoration:none;margin-top:6px}
+.lgb{position:relative;width:34px;height:34px;border-radius:9px;background:var(--pine);overflow:hidden;display:grid;place-items:center;color:#f7f1e3;font-size:23px;font-weight:800;line-height:1;font-family:Onest,"Trebuchet MS","Segoe UI",system-ui,sans-serif;flex:none}
+.lgb i{position:absolute;left:0;right:0;top:0;height:4px;background:#e85d0a}
+.lgb u{text-decoration:none;margin-top:3px}
 .lg button{background:var(--surface);color:var(--ink);border:1.5px solid var(--line);border-radius:999px}.lg button[aria-pressed=true]{background:var(--sel);color:var(--sel-ink);border-color:var(--sel)}
 article{border-radius:16px;box-shadow:var(--sh)}h1{font-family:var(--fd);font-size:24px}
 .back{color:var(--tag)}"""
@@ -201,7 +201,7 @@ def render(name):
     foot = ''.join('<a data-p="/%s.html" href="/%s.html" %s>%s</a>' % (k, k, '', e(NAV[k]['mk'])) for k in NAV)
     foot = ''.join(''.join('<a data-l="%s" data-p="/%s.html" href="/%s.html">%s</a>' % (l, k, k, e(NAV[k][l])) for l in ('mk','sq','en')) for k in NAV)
     return ('<!DOCTYPE html><html lang="mk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
-      '<title>%s</title><meta name="theme-color" content="#fdf8ee"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@500;700;800&display=swap"><link rel="icon" href="/icon.svg" type="image/svg+xml"><style>%s</style></head>'
+      '<title>%s</title><meta name="theme-color" content="#fdf8ee"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@500;700;800&display=swap"><link rel="icon" href="/icon.svg?v=2" type="image/svg+xml"><style>%s</style></head>'
       '<body data-l="mk"><header><div class="in"><a href="/" data-p="/"><span class="lgb"><i></i><u>m</u></span><span>%s</span></a><div class="lg"><button data-k="mk">МК</button><button data-k="sq">SQ</button><button data-k="en">EN</button></div></div></header>'
       '<main>%s<article>%s</article></main><nav class="f">%s</nav><script>%s</script></body></html>') % (
       e(titles['mk']), CSS, 'mazalmk', back, ''.join(arts), foot, JS % json.dumps(titles, ensure_ascii=False))
