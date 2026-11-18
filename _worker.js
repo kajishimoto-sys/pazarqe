@@ -496,7 +496,7 @@ const robotsPage = (() => {
 // /robots.txt – tells Google what to index and where the sitemap is.
 async function onRequest({ request: req }) {
   const origin = new URL(req.url).origin;
-  const body = `User-agent: *\nAllow: /\nDisallow: /admin.html\n\nSitemap: ${origin}/sitemap.xml\n`;
+  const body = `User-agent: *\nAllow: /\nDisallow: /admin.html\nDisallow: /post\nDisallow: /login\nDisallow: /register\nDisallow: /account\n\nSitemap: ${origin}/sitemap.xml\n`;
   return new Response(body, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } });
 }
 
@@ -506,6 +506,7 @@ return onRequest;
 export default {
   async fetch(request, env) {
     const p = new URL(request.url).pathname;
+    if (p === '/post' || p === '/login' || p === '/register' || p === '/account') return env.ASSETS.fetch(new Request(new URL('/', request.url), request));
     if (p === '/robots.txt') return robotsPage({ request });
     if (p === '/sitemap.xml') return sitemapPage({ request });
     if (/^\/oglas\/[^/]+\/?$/.test(p)) return listingPage({ request });
