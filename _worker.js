@@ -353,7 +353,7 @@ ${images.length > 1 ? `<div class="thumbs" id="th">${images.map((u, i) => `<butt
 <p class="big mob">${esc(price)}</p>
 <p class="meta">${esc(catName)}${subName ? ' · ' + esc(subName) : ''} · ${esc(cityName)} · ${esc(ago(days, lang, tx))}</p>
 <p class="meta">${esc(tx.posted)} ${esc(postedOn)} · 👁 <span id="vw">${views}</span> ${esc(views === 1 ? ({ mk: 'преглед', sq: 'shikim', en: 'view' }[lang] || tx.views) : tx.views)}</p>
-<div class="specs"><span class="spec"><b>${esc(kindName)}</b></span>${['new', 'used'].includes(l.cond) && l.category !== 'job' && l.category !== 'serv' ? `<span class="spec"><b>${esc(tx.cond)}</b> ${esc(condLabel)}</span>` : ''}${specs.map(([k, v]) => `<span class="spec"><b>${esc(k)}</b> ${esc(v)}</span>`).join('')}</div>
+<div class="specs"><span class="spec"><b>${esc(kindName)}</b></span>${['new', 'used'].includes(l.cond) && !['job','serv','home','pet'].includes(l.category) ? `<span class="spec"><b>${esc(tx.cond)}</b> ${esc(condLabel)}</span>` : ''}${specs.map(([k, v]) => `<span class="spec"><b>${esc(k)}</b> ${esc(v)}</span>`).join('')}</div>
 ${false ? `<div class="specs">${specs.map(([k, v]) => `<span class="spec"><b>${esc(k)}</b> ${esc(v)}</span>`).join('')}</div>` : ''}
 ${l.description ? `<h2>${esc(tx.desc)}</h2><p class="desc">${esc(l.description)}</p>` : ''}
 ${vid ? `<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/${esc(vid)}" title="${esc(tx.videoT)}" loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>` : ''}
