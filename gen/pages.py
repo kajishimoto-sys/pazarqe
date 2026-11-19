@@ -1,7 +1,7 @@
 # Generates the static info pages (help, safety, privacy, terms, contact) in mk / sq / en.
 # Edit CONTACT_EMAIL, then run:  python3 gen/pages.py   (writes into site/public/)
 import html, datetime
-CONTACT_EMAIL = 'YOUR-EMAIL@example.com'
+CONTACT_EMAIL = 'mazalmk@hotmail.com'
 import os
 OUT = os.path.dirname(os.path.abspath(__file__)) + '/'
 UPD = {'mk': 'Последно ажурирање', 'sq': 'Përditësuar së fundi', 'en': 'Last updated'}
