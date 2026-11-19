@@ -20,7 +20,7 @@ BACK = {'mk': '← Назад кон огласите', 'sq': '← Mbrapa te njo
 P = {}
 P['help'] = {
 'mk': [
- ('Како да објавам оглас?', ['Најавете се или направете сметка, па притиснете „Објави оглас“. Внесете наслов, категорија, град, цена, телефон и до 6 фотографии. Објавувањето е бесплатно.']),
+ ('Како да објавам оглас?', ['Најавете се или направете сметка, па притиснете „Објави оглас“. Внесете наслов, категорија, град, цена, телефон и до 10 фотографии. Објавувањето е бесплатно.']),
  ('Како да го променам или избришам огласот?', ['Отворете го вашиот оглас. Како сопственик ќе ги видите копчињата Уреди, Обнови и Избриши. Сите ваши огласи се и во „Мојата сметка“ → „Мои огласи“.']),
  ('Што прави „Обнови“?', ['Го враќа огласот меѓу најновите, за повторно да биде на врвот од листата.']),
  ('Ја заборавив лозинката.', ['Притиснете „Најави се“ → „Ја заборавив лозинката“ и внесете ја вашата е-пошта. Ќе добиете линк за нова лозинка.']),
@@ -30,7 +30,7 @@ P['help'] = {
  ('Јазици', ['Страницата е на македонски, албански и англиски. Јазикот го менувате од менито горе десно.']),
 ],
 'sq': [
- ('Si të postoj një njoftim?', ['Hyni ose krijoni një llogari, pastaj shtypni „Posto njoftim“. Shkruani titullin, kategorinë, qytetin, çmimin, telefonin dhe deri në 6 foto. Postimi është falas.']),
+ ('Si të postoj një njoftim?', ['Hyni ose krijoni një llogari, pastaj shtypni „Posto njoftim“. Shkruani titullin, kategorinë, qytetin, çmimin, telefonin dhe deri në 10 foto. Postimi është falas.']),
  ('Si ta ndryshoj ose ta fshij njoftimin?', ['Hapni njoftimin tuaj. Si pronar do të shihni butonat Ndrysho, Rinovo dhe Fshi. Të gjitha njoftimet tuaja janë edhe te „Llogaria ime“ → „Njoftimet e mia“.']),
  ('Çfarë bën „Rinovo“?', ['E kthen njoftimin ndër më të rejat, që të jetë sërish në krye të listës.']),
  ('E harrova fjalëkalimin.', ['Shtypni „Hyr“ → „E harrova fjalëkalimin“ dhe shkruani emailin tuaj. Do të merrni një lidhje për fjalëkalim të ri.']),
@@ -40,7 +40,7 @@ P['help'] = {
  ('Gjuhët', ['Faqja është në maqedonisht, shqip dhe anglisht. Gjuhën e ndryshoni nga menyja lart djathtas.']),
 ],
 'en': [
- ('How do I post a listing?', ['Log in or create an account, then press “Post a listing”. Enter a title, category, city, price, phone number and up to 6 photos. Posting is free.']),
+ ('How do I post a listing?', ['Log in or create an account, then press “Post a listing”. Enter a title, category, city, price, phone number and up to 10 photos. Posting is free.']),
  ('How do I edit or delete my listing?', ['Open your listing. As the owner you will see Edit, Renew and Delete. All your listings are also under “My account” → “My listings”.']),
  ('What does “Renew” do?', ['It moves your listing back among the newest, so it is at the top of the list again.']),
  ('I forgot my password.', ['Press “Log in” → “Forgot password” and enter your email. You will receive a link to set a new password.']),
@@ -118,7 +118,7 @@ P['terms'] = {
 'mk': [
  ('Прифаќање', ['Со користење на mazalmk ги прифаќате овие услови.']),
  ('Услугата', ['mazalmk е платформа за огласи. Ние не сме страна во продажбата и не продаваме, не проверуваме и не гарантираме предмети, цени или продавачи. Договорот го правите директно со другата страна.']),
- ('Вашиот оглас', [('ul', ['Одговорни сте за точноста на огласот и имате право да ги користите фотографиите.', 'Огласот мора да е во вистинска категорија и да не е дупликат.', 'Забрането е: илегални предмети, оружје, дрога, украдена стока, измами, лажни огласи, навредлива или дискриминаторска содржина.', 'Ограничување: најмногу 10 огласи на ден по сметка.'])]),
+ ('Вашиот оглас', [('ul', ['Одговорни сте за точноста на огласот и имате право да ги користите фотографиите.', 'Огласот мора да е во вистинска категорија и да не е дупликат.', 'Забрането е: илегални предмети, оружје, дрога, украдена стока, измами, лажни огласи, навредлива или дискриминаторска содржина.'])]),
  ('Отстранување и блокирање', ['Можеме да скриеме или избришеме огласи и да блокираме сметки што ги кршат условите или се пријавени за злоупотреба, без претходна најава.']),
  ('Одговорност', ['Услугата се дава „како што е“. Колку што законот дозволува, не одговараме за штета од трансакции помеѓу корисници или од прекин на услугата.']),
  ('Промени', ['Можеме да ги менуваме условите. Продолжувањето на користењето значи прифаќање на новите услови.']),
@@ -127,7 +127,7 @@ P['terms'] = {
 'sq': [
  ('Pranimi', ['Duke përdorur mazalmk, i pranoni këto kushte.']),
  ('Shërbimi', ['mazalmk është platformë njoftimesh. Ne nuk jemi palë në shitje dhe nuk shesim, nuk kontrollojmë e nuk garantojmë sende, çmime apo shitës. Marrëveshjen e bëni drejtpërdrejt me palën tjetër.']),
- ('Njoftimi juaj', [('ul', ['Jeni përgjegjës për saktësinë e njoftimit dhe keni të drejtë t’i përdorni fotot.', 'Njoftimi duhet të jetë në kategorinë e duhur dhe jo i dyfishtë.', 'E ndaluar: sende të paligjshme, armë, drogë, mallra të vjedhura, mashtrime, njoftime të rreme, përmbajtje fyese ose diskriminuese.', 'Kufizim: maksimumi 10 njoftime në ditë për llogari.'])]),
+ ('Njoftimi juaj', [('ul', ['Jeni përgjegjës për saktësinë e njoftimit dhe keni të drejtë t’i përdorni fotot.', 'Njoftimi duhet të jetë në kategorinë e duhur dhe jo i dyfishtë.', 'E ndaluar: sende të paligjshme, armë, drogë, mallra të vjedhura, mashtrime, njoftime të rreme, përmbajtje fyese ose diskriminuese.'])]),
  ('Heqja dhe bllokimi', ['Mund të fshehim ose fshijmë njoftime dhe të bllokojmë llogari që i shkelin kushtet ose raportohen për abuzim, pa njoftim paraprak.']),
  ('Përgjegjësia', ['Shërbimi ofrohet „siç është“. Sa lejon ligji, nuk jemi përgjegjës për dëme nga transaksionet mes përdoruesve ose nga ndërprerja e shërbimit.']),
  ('Ndryshime', ['Mund t’i ndryshojmë kushtet. Vazhdimi i përdorimit nënkupton pranimin e kushteve të reja.']),
@@ -136,7 +136,7 @@ P['terms'] = {
 'en': [
  ('Acceptance', ['By using mazalmk you accept these terms.']),
  ('The service', ['mazalmk is a classifieds platform. We are not a party to any sale and we do not sell, check or guarantee items, prices or sellers. You make the deal directly with the other person.']),
- ('Your listing', [('ul', ['You are responsible for the accuracy of your listing and must have the right to use its photos.', 'A listing must be in the right category and not a duplicate.', 'Not allowed: illegal items, weapons, drugs, stolen goods, fraud, fake listings, abusive or discriminatory content.', 'Limit: at most 10 listings per day per account.'])]),
+ ('Your listing', [('ul', ['You are responsible for the accuracy of your listing and must have the right to use its photos.', 'A listing must be in the right category and not a duplicate.', 'Not allowed: illegal items, weapons, drugs, stolen goods, fraud, fake listings, abusive or discriminatory content.'])]),
  ('Removal and bans', ['We may hide or delete listings and ban accounts that break these terms or are reported for abuse, without prior notice.']),
  ('Liability', ['The service is provided “as is”. As far as the law allows, we are not liable for losses from transactions between users or from service interruptions.']),
  ('Changes', ['We may change these terms. Continuing to use the site means you accept the new terms.']),
