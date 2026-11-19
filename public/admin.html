@@ -107,11 +107,11 @@ async function start(){
     var d=el('div','stat'+(x[2]?' alert':''));d.appendChild(el('b','',String(x[1])));d.appendChild(el('span','',x[0]));st.appendChild(d)});
   app.appendChild(st);
   var tabs=el('div','tabs');
-  [['reports','Reports'],['listings','Listings'],['users','Users']].forEach(function(t){
+  [['reports','Reports'],['listings','Listings'],['users','Users'],['biz','Businesses']].forEach(function(t){
     var b=el('button','tab',t[1]);b.setAttribute('aria-pressed',tab==t[0]);b.onclick=function(){tab=t[0];start()};tabs.appendChild(b)});
   app.appendChild(tabs);
   var body=el('div');app.appendChild(body);
-  if(tab=='reports')await reportsTab(body);else if(tab=='listings')await searchTab(body,listingsList,'Search title or owner email…');else await searchTab(body,usersList,'Search user email…');
+  if(tab=='reports')await reportsTab(body);else if(tab=='listings')await searchTab(body,listingsList,'Search title or owner email…');else if(tab=='biz')await bizTab(body);else await searchTab(body,usersList,'Search user email…');
 }
 
 /* ───── reports ───── */
@@ -157,6 +157,24 @@ async function listingsList(box,q){
     a.appendChild(btn(l.is_top?'Remove TOP':'Make TOP','ghost',async function(){await rpc('admin_set_top',{p_id:l.id,p_top:!l.is_top});reload()}));
     a.appendChild(btn(l.hidden?'Unhide':'Hide','ghost',async function(){await rpc('admin_set_hidden',{p_id:l.id,p_hidden:!l.hidden});reload()}));
     a.appendChild(btn('Delete','bad',function(){return delListing(l.id,l.title)}));
+    c.appendChild(a);box.appendChild(c);
+  });
+}
+
+/* ───── businesses ───── */
+var BTN={re:'Real estate agency',car:'Car dealership',shop:'Shop',serv:'Services',other:'Other'};
+async function bizTab(box){
+  var rows;try{rows=await rpc('admin_list_businesses',{p_status:null})}catch(e){box.appendChild(el('div','empty','Could not load businesses: '+(e.message||e)+' (did you run migration-7.sql?)'));return}
+  if(!rows.length){box.appendChild(el('div','empty','No business accounts yet.'));return}
+  rows.forEach(function(b){
+    var c=el('div','item'+(b.status=='approved'?' done':'')),top=el('div','row');top.appendChild(el('h3','',b.name));
+    top.appendChild(el('span','pill'+(b.status=='rejected'?' bad':b.status=='pending'?' top':''),b.status));c.appendChild(top);
+    c.appendChild(el('div','meta',(BTN[b.biz_type]||b.biz_type)+' · '+[b.city,b.phone,b.address].filter(Boolean).join(' · ')+' · '+b.owner_email+' · '+b.listing_count+' listing(s) · '+when(b.created_at)));
+    if(b.website)c.appendChild(el('div','meta',b.website));
+    if(b.description)c.appendChild(el('div','note',b.description));
+    var a=el('div','row');
+    if(b.status!='approved')a.appendChild(btn('Approve','',async function(){await rpc('admin_set_business_status',{p_id:b.id,p_status:'approved'});toast('Approved');start()}));
+    if(b.status!='rejected')a.appendChild(btn(b.status=='approved'?'Revoke':'Reject','bad',async function(){await rpc('admin_set_business_status',{p_id:b.id,p_status:'rejected'});toast('Done');start()}));
     c.appendChild(a);box.appendChild(c);
   });
 }
